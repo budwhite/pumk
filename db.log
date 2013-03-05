@@ -1,0 +1,36 @@
+postgres cannot access the server configuration file "/usr/local/var/postgres/postgresql.conf": No such file or directory
+postgres cannot access the server configuration file "/usr/local/var/postgres/postgresql.conf": No such file or directory
+LOG:  database system was shut down at 2013-01-29 03:54:44 CST
+LOG:  database system is ready to accept connections
+LOG:  autovacuum launcher started
+FATAL:  role "chris" does not exist
+FATAL:  role "chris" does not exist
+FATAL:  role "chris" does not exist
+FATAL:  role "chris" does not exist
+FATAL:  role "chris" does not exist
+FATAL:  role "chris" does not exist
+FATAL:  database "love_test" does not exist
+FATAL:  database "love_development" does not exist
+FATAL:  database "christopheretcheverry" does not exist
+ERROR:  database "love_development;
+	" does not exist
+STATEMENT:  DROP DATABASE "love_development;
+	";
+	
+FATAL:  database "love_development" does not exist
+FATAL:  database "love_test" does not exist
+LOG:  received smart shutdown request
+LOG:  autovacuum launcher shutting down
+LOG:  shutting down
+LOG:  database system is shut down
+LOG:  database system was shut down at 2013-02-04 23:45:12 CST
+LOG:  database system is ready to accept connections
+LOG:  autovacuum launcher started
+LOG:  received fast shutdown request
+LOG:  aborting any active transactions
+LOG:  autovacuum launcher shutting down
+LOG:  shutting down
+LOG:  database system is shut down
+LOG:  database system was shut down at 2013-02-28 23:12:38 CST
+LOG:  database system is ready to accept connections
+LOG:  autovacuum launcher started
