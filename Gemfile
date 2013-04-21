@@ -1,12 +1,9 @@
 source 'https://rubygems.org'
 
-group :development, :test do
-  gem 'sqlite3'
-  gem 'debugger'
-end
+gem 'pg', '~> 0.15.1'
 
-group :production do
-  gem 'pg'
+group :development, :test do
+  gem 'debugger'
 end
 
 group :assets do
@@ -15,7 +12,7 @@ group :assets do
   gem 'coffee-rails'
 end
 
-gem 'rails', '3.2.11'
+gem 'rails', '~> 3.2.13'
 gem 'thin'
 gem 'jquery-rails'
 gem 'therubyracer'
