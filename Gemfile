@@ -4,6 +4,9 @@ gem 'pg', '~> 0.15.1'
 
 group :development, :test do
   gem 'debugger'
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'meta_request'
 end
 
 group :assets do
