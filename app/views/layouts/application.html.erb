@@ -55,13 +55,12 @@
 
   </head>
   <body>
-    <div class='container-narrow'>
+    <div class='container'>
       <div class='masthead'>
         <ul class='nav nav-pills pull-right'>
 
           <% if user_signed_in? %>
-            <li>Logged in as <strong><%= current_user.name %></strong></li>
-            <li><%= link_to 'Edit profile', edit_user_registration_path %></li>
+            <li class='active'><%= link_to 'Hello '+current_user.first_name+'!', user_path(current_user) %></li>
             <li><%= link_to "Logout", destroy_user_session_path, method: :delete, id: 'sign_out' %></li>
           <% else %>
             <li><%= link_to "Sign in with Facebook", '#', id: 'sign_in' %></li>

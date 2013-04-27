@@ -11,7 +11,52 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130425034716) do
+ActiveRecord::Schema.define(:version => 20130427021036) do
+
+  create_table "addresses", :force => true do |t|
+    t.string   "street1"
+    t.string   "street2"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zipcode"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "children", :force => true do |t|
+    t.string   "name"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "grade"
+    t.string   "teacher"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "user_id"
+  end
+
+  create_table "riderships", :force => true do |t|
+    t.integer  "ride_id"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "rides", :force => true do |t|
+    t.string   "status"
+    t.integer  "gas_money"
+    t.integer  "seats_total"
+    t.integer  "seats_filled"
+    t.text     "schedule"
+    t.integer  "origin_address_id"
+    t.integer  "destination_address_id"
+    t.integer  "driver_id"
+    t.string   "ride_type"
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
+  end
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "", :null => false
@@ -34,6 +79,7 @@ ActiveRecord::Schema.define(:version => 20130425034716) do
     t.string   "first_name"
     t.string   "last_name"
     t.string   "image"
+    t.integer  "home_address_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

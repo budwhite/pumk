@@ -7,6 +7,8 @@ group :development, :test do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'meta_request'
+  gem 'awesome_print', :require => 'ap'
+  gem 'sextant'
 end
 
 group :assets do
@@ -22,4 +24,6 @@ gem 'less-rails'
 gem 'devise'
 gem 'figaro'
 gem 'omniauth'
-gem 'omniauth-facebook', '1.4.0'
+gem 'omniauth-facebook'
+gem 'ice_cube'
+gem 'rails-erd'
