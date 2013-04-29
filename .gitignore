@@ -13,10 +13,10 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+/test
 
 *.psd
 
 # Ignore application configuration
 /config/application.yml
-.zeus.sock
 erd.pdf

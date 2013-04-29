@@ -7,17 +7,20 @@ class User < ActiveRecord::Base
          :omniauthable, :omniauth_providers => [:facebook]
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me
+  attr_accessible :name, :email, :password, :password_confirmation, :remember_me, :addresses_attributes, :children_attributes
   # attr_accessible :title, :body
+
+  has_many :addresses, dependent: :destroy
+  accepts_nested_attributes_for :addresses, allow_destroy: true
+
+  has_many :children, dependent: :destroy
+  accepts_nested_attributes_for :children, allow_destroy: true
 
   # this allows for queries like: @user.rides_as_driver
   has_many :rides_as_driver, :class_name => 'Ride', :foreign_key => 'driver_id'
-
   has_many :riderships, dependent: :restrict
-
   # @user.rides_as_rider
   has_many :rides_as_rider, :source => :ride, :through => :riderships
-  has_many :children, dependent: :destroy
 
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_create do |user|
