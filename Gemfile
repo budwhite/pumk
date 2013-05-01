@@ -11,6 +11,7 @@ group :development, :test do
   gem 'sextant'
   gem 'listen'
   gem 'rb-fsevent', :require => false
+  gem 'rails-erd'
 end
 
 group :assets do
@@ -29,5 +30,6 @@ gem 'figaro'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'ice_cube'
-gem 'rails-erd'
 gem 'simple_form'
+gem 'bootstrap-timepicker-rails'
+gem 'bootstrap-datepicker-rails'

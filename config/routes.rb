@@ -5,6 +5,8 @@ Love::Application.routes.draw do
     :registrations => 'devise/custom/registrations'
   }
   resources :users, :only => [:show, :update]
+  resources :rides
+  resources :addresses
 
   root :to => 'home#index'
 end

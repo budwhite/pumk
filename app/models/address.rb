@@ -1,5 +1,5 @@
 class Address < ActiveRecord::Base
-  attr_accessible :name, :city, :state, :street1, :street2, :zipcode
+  attr_accessible :name, :city, :state, :street1, :street2, :zipcode, :latitude, :longitude, :user_id
 
   belongs_to :user
   has_many :rides_as_origin, :class_name => 'Ride', :foreign_key => 'origin_address_id'

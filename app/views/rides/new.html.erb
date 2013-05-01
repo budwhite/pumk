@@ -1,0 +1,37 @@
+<%= simple_form_for @ride, :html => { :class => 'form-horizontal' } do |f| %>
+
+  <% creator_types = ['offering to drive?', 'looking for help with drop-off or pick-up?'] %>
+  <%= f.input :creator_type, 
+    label: 'Are you',
+    as: :radio_buttons,
+    collection: creator_types,
+    checked: creator_types.first %>
+
+  <h4 class='ride-type-question'>What kind of ride are you offering?</h4>
+
+  <%= f.input :ride_type, collection: Ride::RIDE_TYPES, as: :radio_buttons, :item_wrapper_class => 'inline', checked: Ride::RIDE_TYPES.first %>
+
+  <%= render partial: 'ride_type_form', locals: { f: f } %>
+
+  <%= f.input :from_date, label: 'From', wrapper: :append do %>
+    <%= f.input_field :from_date, class: 'rideDateFrom input-small' %>
+    <%= content_tag :span, class: 'add-on' do %>
+      <i class='icon-calendar'></i>
+    <% end %>
+  <% end %>
+
+  <%= f.input :to_date, label: 'To', wrapper: :append do %>
+    <%= f.input_field :to_date, class: 'rideDateTo input-small' %>
+    <%= content_tag :span, class: 'add-on' do %>
+      <i class='icon-calendar'></i>
+    <% end %>
+  <% end %>
+
+  <h4 class='ride-fare-question'>How much do you want each of your little riders to contribute, per ride?</h4>
+
+  <%= f.input :gas_money, label: '$', selected: 5,
+    collection: 0..20, input_html: { class: 'input-mini' } %>
+  <%= f.input :seats_total, label: '# of available seats on your car', selected: 1,
+    collection: 1..4, input_html: { class: 'input-mini' } %>
+  <%= f.button :submit, 'Post Ride!', :class => 'btn-success' %>
+<% end %>
