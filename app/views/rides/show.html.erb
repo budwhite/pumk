@@ -1,2 +1,66 @@
-<h1>Rides#show</h1>
-<p>Find me in app/views/rides/show.html.erb</p>
+<div class='row'>
+  <div class='span12'>
+    <h2><%= @ride.ride_type %> Trip</h2>
+    <p>
+    <%= @ride.origin_address.full_street_address %> 
+    to
+    <%= @ride.destination_address.name %>
+    </p>
+    <p>
+    <% if @ride.ride_type.downcase.include? 'drop-off' %>
+      <% then leading_text = 'Arriving at' %>
+      <% else leading_text = 'Leaving at' %>
+    <% end %>
+    <%= leading_text %>
+    <%= @ride.schedule.start_time.strftime('%H:%M %P') %>
+    <%= @ride.schedule %>
+    </p>
+    <p>
+    <% if not @ride.schedule1.recurrence_rules.empty? %>
+      And <%= leading_text.downcase %>
+      <%= @ride.schedule1.start_time.strftime('%H:%M %P') %>
+      <%= @ride.schedule1 %>
+    <% end %>
+    </p>
+  </div>
+</div>
+
+<div class='row'>
+  <div class='span2'>
+    <a href='#' class='thumbnail'>
+      <%= image_tag @ride.driver.image %>
+    </a>
+    <%= link_to 'Contact me', '#', class: 'btn btn-primary' %>
+  </div>
+  <div class='span6'>
+    <h4>
+      <%= @ride.driver.first_name %> <%= @ride.driver.last_name %>
+      <small>
+        is your driver
+      </small>
+    </h4>
+    <% @ride.driver.children.each do |c| %>
+      <p>His son <%= c.name %> is at grade <%= c.grade %> in <%= c.teacher %>'s class.</p>
+    <% end %>
+    <p>You have X Facebook friends in common. </p>
+    <p><i class='icon-ok icon-large'></i>Verified parent of Cherry Crest Elementary.</p>
+  </div>
+</div>
+
+<div class='row'>
+  <div class='span8'>
+    <div class='map-canvas big' 
+      data-lat= '<%= @ride.origin_address.latitude %>'
+      data-lng= '<%= @ride.origin_address.longitude %>' >
+    </div>
+  </div>
+  <div class='span2'>
+    <p>$<%= @ride.gas_money %> per ride</p>
+    <p>Or $<%= @ride.gas_money * 5 %> weekly</p>
+    <p><%= pluralize(@ride.seats_total - @ride.seats_filled, 'seat') %> left</p>
+    <%= link_to '#', class: 'btn btn-primary' do %>
+      <i class='icon-shopping-cart icon-large'></i>
+      Book It!
+    <% end %>
+  </div>
+</div>

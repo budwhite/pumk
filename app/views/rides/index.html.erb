@@ -1,2 +1,74 @@
-<h1>Rides#index</h1>
-<p>Find me in app/views/rides/index.html.erb</p>
+<% howmany = @rides.count %>
+<div class='page-header'>
+  <h2>
+    Showing <%= pluralize(howmany, 'match') %>
+    <small>Sort by distance to your home</small>
+  </h2>
+</div>
+
+<% @rides.each do |r| %>
+
+  <div class='row'>
+    <div class='span2'>
+      <a href='#' class='thumbnail'>
+        <%= image_tag(r.driver.image) %>
+      </a>
+    </div>
+    <div class='span6'>
+      <div class='row'>
+        <div class='span4'>
+          <h4>
+            <span class='text-info'>
+              <strong><%= r.driver.name %></strong>
+            </span> 
+            <% if r.driver_id != nil %>
+              offering to drive
+            <% else %>
+              looking for help
+            <% end %>
+          </h4>
+          <p>
+          <span class='label label-inverse'>
+            <%= r.ride_type %> Ride
+          </span>
+          </p>
+          <p>
+          From <i class='icon-map-marker icon-large' style='color: green;'></i> 
+          <%= r.origin_address.full_street_address %>
+          </p>
+          <p>
+          To <i class='icon-map-marker icon-large' style='color: red;'></i> <%= r.destination_address.name %>
+          </p>
+        </div>
+        <div class='span2'>
+          <h3>$<%= r.gas_money %> per ride</h3>
+          <%= link_to 'More Info', ride_path(r.id), class: 'btn btn-primary' %>
+        </div>
+      </div>
+      
+      <p>
+      <% if r.ride_type.downcase.include? 'drop-off' %>
+        <% then leading_text = 'Arriving at' %>
+        <% else leading_text = 'Leaving at' %>
+      <% end %>
+      <%= leading_text %>
+      <%= r.schedule.start_time.strftime('%H:%M %P') %>
+      <%= r.schedule %>
+      </p>
+      <p>
+      <% if not r.schedule1.recurrence_rules.empty? %>
+        And <%= leading_text.downcase %>
+        <%= r.schedule1.start_time.strftime('%H:%M %P') %>
+        <%= r.schedule1 %>
+      <% end %>
+      </p>
+      
+    </div>
+    <div class='span4'>
+      <div class='map-canvas small' 
+        data-lat= '<%= r.origin_address.latitude %>'
+        data-lng= '<%= r.origin_address.longitude %>' >
+      </div>
+    </div>
+  </div>
+<% end %>

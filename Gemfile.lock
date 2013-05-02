@@ -72,6 +72,7 @@ GEM
     ffi (1.8.1)
     figaro (0.5.3)
       rails (~> 3.0)
+    geocoder (1.1.8)
     hashie (2.0.4)
     hike (1.2.2)
     httpauth (0.2.0)
@@ -209,6 +210,7 @@ DEPENDENCIES
   debugger
   devise
   figaro
+  geocoder
   ice_cube
   jquery-rails
   less-rails

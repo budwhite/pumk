@@ -1,5 +1,7 @@
 class Address < ActiveRecord::Base
-  attr_accessible :name, :city, :state, :street1, :street2, :zipcode, :latitude, :longitude, :user_id
+  attr_accessible :name, :city, :state, :street1, :street2, :zipcode, :latitude, :longitude, :user_id, :address
+  geocoded_by :full_street_address
+  after_validation :geocode
 
   belongs_to :user
   has_many :rides_as_origin, :class_name => 'Ride', :foreign_key => 'origin_address_id'
@@ -11,4 +13,12 @@ class Address < ActiveRecord::Base
 
   # http://stackoverflow.com/questions/8212378/validate-us-zip-code-using-rails
   validates :zipcode, format: { :with => VALID_ZIP_REGEX, :message => 'should be in the form 12345 or 12345-1234' }
+
+  def full_street_address
+    if street2.empty?
+      [street1, city, state, zipcode].compact.join(', ')
+    else
+      [street1, street2, city, state, zipcode].compact.join(', ')
+    end
+  end
 end

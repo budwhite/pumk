@@ -9,6 +9,7 @@
           <%= addresses_form.input :city %>
           <%= addresses_form.input :state %>
           <%= addresses_form.input :zipcode %>
+          <%= addresses_form.input :name, as: :hidden, input_html: { value: 'Home' } %>
         <% end %>
       <% end %>
       <%= field_set_tag 'Tell us about your kid!' do %>
@@ -18,7 +19,7 @@
           <%= children_form.input :teacher %>
         <% end %>
       <% end %>
-      <%= f.submit 'Submit', :class => 'btn btn-success'  %>
+      <%= f.submit 'Submit', :class => 'btn btn-primary'  %>
     <% end %>
 
     <%= link_to "Back", :back %>

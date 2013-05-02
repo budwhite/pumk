@@ -1,43 +1,47 @@
 <div class='row'>
-  <div class='span2'>
-    <a href='#' class='thumbnail'>
-      <%= image_tag(current_user.image, alt: current_user.name) %>
-    </a>
-    <%= link_to 'My Profile', edit_user_registration_path %>
-  </div>
-  <div class='span7'>
-    <h3>
-      Welcome <%= current_user.first_name %>! You have new alerts:
-    </h3>
-    <div class='alert alert-info'>
-      <h4>Get started creating carpool or finding matches!</h4>
-      <ul class='icons'>
-        <li><i class='icon-group'></i>
-          Have time and willing to drive other kids? Offer your ride to other Cherry Crest kid!
-        </li>
-        <li><i class='icon-coffee'></i>
-          Busy parent looking for help? Find a parent that can help out!
-        </li>
-      </ul>
-      <%= link_to 'Get Started', new_ride_path, class: 'btn btn-success' %>
-    </div>
-  </div>
-  <div class='span3'>
-    <div class='alert alert-block'>
-      <h4>Your transactions</h4>
-      <hr></hr>
-      None so far
-    </div>
-  </div>
-</div>
 
-<div class='row'>
-  <div class='span12'>
-    <h2>My Rides</h2>
-    <% if current_user.rides_as_driver.empty? && current_user.rides_as_rider.empty? %>
-      <p class='lead text-info'>
-      Nothing in here yet! Follow the Get Started wizard to create or find one! 
-      </p>
-    <% end %>
+  <div class='span8'>
+    <div class=''>
+      <div class=''>
+        <h3>Hi <%= current_user.first_name %>!</h3>
+
+        <% flash.each do |name, msg| %>
+          <div class='alert alert-<%= name %>'>
+            <a class='close' data-dismiss='alert'>&#215;</a>
+            <%= content_tag :div, msg, id: "flash_#{name}" %>
+          </div>
+        <% end %>
+
+        <%= render 'get_started_alert' %>
+      </div>
+
+      <% if false %>
+        <div class='span2'>
+          <a href='#' class='thumbnail'>
+            <%= image_tag(current_user.image, alt: current_user.name) %>
+          </a>
+          <%= link_to 'My Profile', edit_user_registration_path %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class='row'>
+      <div class='span8'>
+        <h3>My Rides</h3>
+        <% if current_user.rides_as_driver.empty? && current_user.rides_as_rider.empty? %>
+          <p class='lead text-info'>
+          Nothing in here yet! Follow the Get Started wizard to create or find one! 
+          </p>
+        <% else %>
+          <% current_user.rides_as_driver.each do |r| %>
+            <%= render partial: 'ride_info_listing', locals: { r: r } %>
+          <% end %>
+          <% current_user.rides_as_rider.each do |r| %>
+            <%= render partial: 'ride_info_listing', locals: { r: r } %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
   </div>
+
 </div>

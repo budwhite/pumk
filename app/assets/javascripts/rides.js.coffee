@@ -47,4 +47,19 @@ $ ->
       $('h4.ride-fare-question').text 'How much do you want each of your little riders to contribute, per ride?'
       $('div.ride_seats_total').css('display', '')
 
+  # map stuff
+  if $map = $('.map-canvas')
+    lat = $map.data('lat')
+    lng = $map.data('lng')
+    options = {
+      zoom: 15,
+      center: new google.maps.LatLng(lat, lng),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    map = new google.maps.Map $map[0], options
+    marker = new google.maps.Marker {
+      position: options.center,
+      map: map
+    }
+
   true

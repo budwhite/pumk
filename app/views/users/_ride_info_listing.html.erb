@@ -1,0 +1,63 @@
+<hr></hr>
+<div class='container'>
+  <div class='row'>
+    <div class='span6'>
+      <h4>
+        <span class='text-info'>
+          <strong><%= current_user.name %></strong>
+        </span> 
+        <% if r.driver_id != nil %>
+          offering to drive
+        <% else %>
+          looking for help
+        <% end %>
+      </h4>
+      <p>
+      <span class='label label-inverse'>
+        <%= r.ride_type %> Ride
+      </span>
+      </p>
+      <p>
+      From <i class='icon-map-marker icon-large' style='color: green;'></i> <%= r.origin_address.full_street_address %>
+      </p>
+      <p>
+      To <i class='icon-map-marker icon-large' style='color: red;'></i> <%= r.destination_address.name %>
+      </p>
+      <p>
+      <% if r.ride_type.downcase.include? 'drop-off' %>
+        <% then leading_text = 'Arriving at' %>
+        <% else leading_text = 'Leaving at' %>
+      <% end %>
+      <%= leading_text %>
+      <%= r.schedule.start_time.strftime('%H:%M %P') %>
+      <%= r.schedule %>
+      </p>
+      <% if not r.schedule1.recurrence_rules.empty? %>
+        And <%= leading_text.downcase %>
+        <%= r.schedule1.start_time.strftime('%H:%M %P') %>
+        <%= r.schedule1 %>
+      <% end %>
+    </div>
+    <div class='span2'>
+      <h3>$<%= r.gas_money %> per ride</h3>
+      <%= link_to 'More Info', '#', class: 'btn btn-primary' %>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='span7'>
+      <%= link_to rides_path(current_ride: r.id), class: 'btn btn-primary' do %>
+        <i class='icon-group icon-large'></i>
+        Match List 
+      <% end %>
+      <%= link_to '#', class: 'btn btn-primary' do %>
+        <i class='icon-edit icon-large'></i>
+        Edit Ride 
+      <% end %>
+      <%= link_to r, method: 'delete', class: 'btn btn-danger',
+        data: { confirm: "You sure?" } do %>
+          <i class='icon-remove icon-large'></i>
+          Cancel Ride 
+      <% end %>
+    </div>
+  </div>
+</div>

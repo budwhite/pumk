@@ -2,9 +2,16 @@ class RidesController < ApplicationController
   include IceCube
 
   def index
+    ride = Ride.find(params[:current_ride])
+    if ride.driver_id == nil
+      @rides = Ride.all.select { |r| r.driver_id != nil }
+    else
+      @rides = Ride.where(driver_id: nil).to_a
+    end
   end
 
   def show
+    @ride = Ride.find(params[:id])
   end
 
   def new
@@ -68,5 +75,17 @@ class RidesController < ApplicationController
   end
 
   def destroy
+    ride = Ride.find(params[:id])
+    ride.destroy
+    flash[:success] = 'Ride canceled!'
+
+    respond_to do |format|
+      format.html { redirect_to user_path(current_user) }
+      format.json { head :no_content }
+    end
+  end
+
+  def book
+
   end
 end

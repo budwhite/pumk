@@ -12,7 +12,7 @@ class Ride < ActiveRecord::Base
   belongs_to :driver, :class_name => 'User'
 
   # this allows for queries like: @ride.riders
-  has_many :riderships, dependent: :restrict
+  has_many :riderships #, dependent: :restrict
   has_many :riders, :source => :user, :through => :riderships
 
   # @ride.origin_address
