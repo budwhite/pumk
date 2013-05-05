@@ -42,7 +42,11 @@
         </div>
         <div class='span2'>
           <h3>$<%= r.gas_money %> per ride</h3>
-          <%= link_to 'More Info', ride_path(r.id), class: 'btn btn-primary' %>
+          <% if r.status == 'posted' %>
+          <% then status_str = 'More Info' %>
+          <% else status_str = 'Pending' %>
+          <% end %>
+          <%= link_to status_str, ride_path(r.id), class: 'btn btn-primary' %>
         </div>
       </div>
       

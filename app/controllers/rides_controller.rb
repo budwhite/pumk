@@ -85,7 +85,53 @@ class RidesController < ApplicationController
     end
   end
 
-  def book
+  def booking
+    @ride = Ride.find(params[:id])
+  end
 
+  def booked
+    # need to update the phone number to current user
+    booked_ride = Ride.find(params[:user][:booked_ride_id])
+
+    # if I'm not already a rider and there are seats available
+    if !booked_ride.riders.include? current_user && 
+      booked_ride.seats_total - booked_ride.seats_filled > 0
+      booked_ride.update_attributes(expiration: 1.day.from_now)
+      booked_ride.riders << current_user
+      Ridership.where("ride_id = ? AND user_id = ?", booked_ride.id, current_user.id).first.update_attributes(confirmed: false)
+      booked_ride.save
+      RideStatusMailer.ride_booked(current_user, booked_ride).deliver
+    else
+      raise 'user already a rider or no seats available'
+    end
+  end
+
+  def responding
+    @ride = Ride.find(params[:id])
+    @rider = User.find(params[:rider_id])
+  end
+
+  def responded
+    responded_to_ride = Ride.find(params[:ride][:responded_to_ride_id])
+    responded_to_rider = User.find(params[:ride][:responded_to_rider_id])
+
+    if params[:commit].downcase.include? 'accept'
+      current_user.update_attributes(phone_number: params[:ride][:phone_number])
+      responded_to_ride.update_attributes(comment: params[:ride][:comment])
+      responded_to_ride.update_attributes(seats_filled: responded_to_ride.seats_filled + 1) unless (responded_to_ride.seats_total - responded_to_ride.seats_filled > 0)
+      responded_to_ride.update_attributes(expiration: nil)
+      @ridership = Ridership.where("ride_id = ? AND user_id = ?", responded_to_ride.id, responded_to_rider.id).first
+      @ridership.update_attributes(confirmed: true)
+      RideStatusMailer.ride_accepted(responded_to_rider, responded_to_ride).deliver
+
+      if current_user.paypal_email == nil
+        render :setup_paypal
+      end
+    else
+      # handle declined request
+    end
+  end
+
+  def setup_paypal
   end
 end

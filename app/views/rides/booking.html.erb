@@ -1,0 +1,81 @@
+<div class='row'>
+  <div class='span8'>
+    <h2>1 Ride details</h2>
+    <div class='row'>
+      <div class='span8'>
+        <div class='row'>
+          <div class='span8'>
+            <p><%= @ride.ride_type %> at Cherry Crest</p>
+            <p><%= @ride.schedule %></p>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='span1'>
+            <%= image_tag @ride.driver.image %>
+          </div>
+          <div class='span2'>
+            <p>Driver</p>
+            <p><%= @ride.driver.first_name %> <%= @ride.driver.last_name %></p>
+          </div>
+          <div class='span5'>
+            <p>
+            From <i class='icon-map-marker icon-large' style='color: green;'></i> 
+            <%= @ride.origin_address.full_street_address %>
+            </p>
+            <p>
+            To <i class='icon-map-marker icon-large' style='color: red;'></i> <%= @ride.destination_address.name %>
+            </p>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='span8'>
+            $<%= @ride.gas_money %> per ride
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2>2 Payment <i class='icon-lock icon-large'></i></h2>
+    <div class='row'>
+      <div class='span8'>
+        <%= render 'credit_card_form' %>
+      </div>
+    </div>
+
+    <h2>3 Contact Info</h2>
+    <div class='row'>
+      <div class='span8'>
+        <%= simple_form_for current_user, 
+          html: { class: 'form-horizontal user_phone' },
+          url: url_for(controller: 'rides', action: 'booked'), method: :put do |f| %>
+          <%= f.input :phone_number,
+            label: 'Please provide your best contact number:',
+            placeholder: 'phone number' %>
+          <%= f.input 'booked_ride_id', as: :hidden, input_html: { value: @ride.id } %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class='row'>
+      <button class='btn btn-primary submit'>Book It!</button>
+    </div>
+  </div>
+
+  <div class='span4'>
+    <h2 style='visibility:hidden;'>Space filler</h2>
+    <div class='row'>    
+      <div class='span4'>
+        <div class='alert alert-info'>
+          <p class='lead'>
+          How it works
+          </p>
+          <p>
+          <small>
+            You WILL NOT be charged unless John accepts your request. If John doesn't respond with 24 hours the request will expire and you can try someone else.
+          </small>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

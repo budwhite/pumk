@@ -48,7 +48,8 @@ $ ->
       $('div.ride_seats_total').css('display', '')
 
   # map stuff
-  if $map = $('.map-canvas')
+  $map = $('.map-canvas')
+  if $map.length > 0
     lat = $map.data('lat')
     lng = $map.data('lng')
     options = {
@@ -61,5 +62,24 @@ $ ->
       position: options.center,
       map: map
     }
+
+  # form submit on booking view
+  $('button.submit').click -> $('form.user_phone').submit()
+
+  # respond view, accept and decline
+  $button_accept = $('button.accept')
+  $button_decline = $('button.decline')
+
+  $button_accept.click ->
+    if $(@).hasClass 'active'
+      $('div.accept_form').addClass 'hidden'
+    else
+      $('div.accept_form').removeClass 'hidden'
+
+  $button_decline.click ->
+    if $(@).hasClass 'active'
+      $('div.decline_form').addClass 'hidden'
+    else
+      $('div.decline_form').removeClass 'hidden'
 
   true

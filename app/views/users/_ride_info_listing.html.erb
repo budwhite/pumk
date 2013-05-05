@@ -3,12 +3,15 @@
   <div class='row'>
     <div class='span6'>
       <h4>
-        <span class='text-info'>
-          <strong><%= current_user.name %></strong>
-        </span> 
         <% if r.driver_id != nil %>
+          <span class='text-info'>
+            <strong><%= r.driver.name %></strong>
+          </span> 
           offering to drive
         <% else %>
+          <span class='text-info'>
+            <strong><%= current_user.name %></strong>
+          </span> 
           looking for help
         <% end %>
       </h4>
@@ -40,7 +43,17 @@
     </div>
     <div class='span2'>
       <h3>$<%= r.gas_money %> per ride</h3>
-      <%= link_to 'More Info', '#', class: 'btn btn-primary' %>
+      <% if (r.driver_id != nil) && (r.riders.include? current_user) %>
+        <% ride_status = Ridership.where("ride_id = ? AND user_id = ?", r.id, current_user.id).first %>
+        <% if ride_status.confirmed %>
+          <% status_str = 'Confirmed' %>
+        <% else %>
+          <% status_str = 'Pending' %>
+        <% end %>
+      <% else %>
+        <% status_str = 'More info' %>
+      <% end %>
+      <%= link_to status_str, '#', class: 'btn btn-primary' %>
     </div>
   </div>
   <div class='row'>

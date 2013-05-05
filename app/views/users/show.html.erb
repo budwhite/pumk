@@ -12,6 +12,36 @@
           </div>
         <% end %>
 
+        <% current_user.rides_as_driver.each do |ride| %>
+          <% if !ride.riders.empty? %>
+            <% ride.riders.each do |rider| %>
+              <% if !Ridership.where("ride_id = ? AND user_id = ?", ride.id, rider.id).first.confirmed %>
+                <div class='alert alert-success'>
+                  <a class='close' data-dismiss='alert'>&#215;</a>
+                  <div class='row'>
+                    <div class='span1'>
+                      <%= image_tag ride.driver.image %>
+                    </div>
+                    <div class='span6'>
+                      <p>
+                        <%= rider.name %> booked your <%= ride.ride_type %> ride to
+                        Cherry Crest! You'll get paid $<%= ride.gas_money %> per trip if
+                        you accept the request.
+                      </p>
+                      <%= link_to 'Respond', responding_to_ride_path(ride.id, { rider_id: rider.id }), class: 'btn btn-primary' %>
+                      <p>
+                      <div class='countdown' data-expiration='<%= ride.expiration.to_i %>' >
+                      </div>
+                        Time left to respond
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+
         <%= render 'get_started_alert' %>
       </div>
 

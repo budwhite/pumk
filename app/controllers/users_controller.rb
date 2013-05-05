@@ -17,4 +17,10 @@ class UsersController < ApplicationController
       render 'devise/custom/registrations/edit'
     end
   end
+
+  def setup_paypal
+    current_user.update_attributes(paypal_email: params[:user][:paypal_email])
+    @ridership = Ridership.find(params[:user][:ridership_id])
+    render 'rides/responded'
+  end
 end

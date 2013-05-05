@@ -6,7 +6,7 @@ class Ride < ActiveRecord::Base
   attr_accessor :creator_type, #creator of ride, is she driver or rider?
     :origin, :destination, :time, :time1, :excluding_day, :from_date, :to_date
 
-  attr_accessible :destination_address_id, :driver_id, :gas_money, :origin_address_id, :schedule, :seats_filled, :seats_total, :status, :ride_type
+  attr_accessible :destination_address_id, :driver_id, :gas_money, :origin_address_id, :schedule, :seats_filled, :seats_total, :status, :ride_type, :expiration, :comment
 
   # this allows for queries like: @ride.driver
   belongs_to :driver, :class_name => 'User'

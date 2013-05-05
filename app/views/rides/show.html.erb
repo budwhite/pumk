@@ -57,10 +57,20 @@
   <div class='span2'>
     <p>$<%= @ride.gas_money %> per ride</p>
     <p>Or $<%= @ride.gas_money * 5 %> weekly</p>
-    <p><%= pluralize(@ride.seats_total - @ride.seats_filled, 'seat') %> left</p>
-    <%= link_to '#', class: 'btn btn-primary' do %>
-      <i class='icon-shopping-cart icon-large'></i>
-      Book It!
+
+    <% seats_left = @ride.seats_total - @ride.seats_filled %>
+    <% if seats_left > 0 %>
+      <p><%= pluralize(seats_left, 'seat') %> left</p>
+      <%= link_to booking_ride_path(@ride.id), class: 'btn btn-primary' do %>
+        <i class='icon-shopping-cart icon-large'></i>
+        Book It!
+      <% end %>
+    <% else %>
+      <p>No seats left!</p>
+      <%= link_to '#', class: 'btn btn-primary disabled' do %>
+        <i class='icon-shopping-cart icon-large'></i>
+        Book It!
+      <% end %>
     <% end %>
   </div>
 </div>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130502161108) do
+ActiveRecord::Schema.define(:version => 20130505052302) do
 
   create_table "addresses", :force => true do |t|
     t.string   "street1"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(:version => 20130502161108) do
     t.integer  "user_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.boolean  "confirmed"
   end
 
   create_table "rides", :force => true do |t|
@@ -58,6 +59,8 @@ ActiveRecord::Schema.define(:version => 20130502161108) do
     t.datetime "created_at",             :null => false
     t.datetime "updated_at",             :null => false
     t.text     "schedule1"
+    t.datetime "expiration"
+    t.text     "comment"
   end
 
   create_table "users", :force => true do |t|
@@ -82,6 +85,8 @@ ActiveRecord::Schema.define(:version => 20130502161108) do
     t.string   "last_name"
     t.string   "image"
     t.integer  "home_address_id"
+    t.string   "phone_number"
+    t.string   "paypal_email"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

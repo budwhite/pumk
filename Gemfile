@@ -12,6 +12,7 @@ group :development, :test do
   gem 'listen'
   gem 'rb-fsevent', :require => false
   gem 'rails-erd'
+  gem 'letter_opener'
 end
 
 group :assets do
@@ -34,3 +35,4 @@ gem 'simple_form'
 gem 'bootstrap-timepicker-rails'
 gem 'bootstrap-datepicker-rails'
 gem 'geocoder'
+gem 'more-font-awesome-rails', '~> 3.0.2'

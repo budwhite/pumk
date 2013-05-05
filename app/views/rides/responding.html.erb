@@ -1,0 +1,96 @@
+<div class='row'>
+  <div class='span8'>
+    <h2>Ride request from <%= @rider.name %> for his kid <%= @rider.children.first.name %></h2>
+    <div class='row'>
+      <div class='span8'>
+        <p>
+        Your daily ride from <%= @ride.origin_address.name %> to <%= @ride.destination_address.name %>
+        </p>
+        <p>
+        <%= @ride.schedule %>
+        </p>
+        <p>
+        <%= @rider.first_name %>'s son will be your passenger
+        </p>
+        <p>
+          Their house is XXX miles from yours.
+        </p>
+        <div class='map-canvas small' 
+          data-lat= "<%= @rider.addresses.where(name: 'Home').first.latitude %>"
+          data-lng= "<%= @rider.addresses.where(name: 'Home').first.longitude %>" >
+        </div>
+        <p>
+          Single trip $<%= @ride.gas_money %>
+        </p>
+        <hr></hr>
+        <p>
+        <strong>TOTAL PAYOUT</strong>
+        <span class='pull-right'>$<%= @ride.gas_money * 5 %> per week</span>
+        </p>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='span8'>
+        <button class='accept span2 btn btn-success' data-toggle='button'>Accept</button>
+        <button class='decline span2 btn btn-danger' data-toggle='button'>Decline</button>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='span6'>
+        <div class='accept_form alert alert-info hidden'>
+          <%= simple_form_for @ride, 
+            html: { class: 'form-horizontal' },
+            url: url_for(controller: 'rides', action: 'responded'), method: :put do |f| %>
+            <%= f.input :phone_number, as: :string, input_html: { value: '' },
+              label: 'Please provide your best contact number:',
+              placeholder: 'phone number' %>
+            <%= f.input :comment, input_html: { rows: 5 },
+              placeholder: 'Include an optional message for ' + @rider.first_name + '.' %>
+            <%= f.input 'responded_to_ride_id', as: :hidden, input_html: { value: @ride.id } %>
+            <%= f.input 'responded_to_rider_id', as: :hidden, input_html: { value: @rider.id } %>
+            <%= f.submit 'Accept!', class: 'btn btn-success' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='span6'>
+        <div class='decline_form alert alert-info hidden'>
+          <%= simple_form_for @ride, 
+            html: { class: 'form-horizontal' },
+            url: url_for(controller: 'rides', action: 'responded'), method: :put do |f| %>
+            <%= f.input :comment, as: :text, input_html: { value: '', rows: 5 },
+              placeholder: 'Why are you declining ' + @rider.first_name + "'s request?" %>
+            <%= f.input 'responded_to_ride_id', as: :hidden, input_html: { value: @ride.id } %>
+            <%= f.input 'responded_to_rider_id', as: :hidden, input_html: { value: @rider.id } %>
+            <%= f.submit 'Decline', class: 'btn btn-danger' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class='span4'>
+    <br></br>
+    <br></br>
+    <div class='row'>
+      <div class='span4'>
+        <div class='countdown' data-expiration='<%= @ride.expiration.to_i %>' >
+        </div>
+        <p>time left to respond</p>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='span4'>
+        <div class='alert alert-info'>
+          <p class='lead'>
+            How it works
+          </p>
+          <small>
+            Respond before the countdown completes to accept or decline <%= @rider.first_name %>'s request. If you accept, you'll get paid $<%= @ride.gas_money * 5 %> after the trips occur for the week.
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
