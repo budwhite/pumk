@@ -98,7 +98,7 @@ class RidesController < ApplicationController
       booked_ride.seats_total - booked_ride.seats_filled > 0
       booked_ride.update_attributes(expiration: 1.day.from_now)
       booked_ride.riders << current_user
-      Ridership.where("ride_id = ? AND user_id = ?", booked_ride.id, current_user.id).first.update_attributes(confirmed: false)
+      Ridership.where("ride_id = ? AND user_id = ?", booked_ride.id, current_user.id).first.update_attributes(status: 'booked')
       booked_ride.save
       RideStatusMailer.ride_booked(current_user, booked_ride).deliver
     else
@@ -121,7 +121,7 @@ class RidesController < ApplicationController
       responded_to_ride.update_attributes(seats_filled: responded_to_ride.seats_filled + 1) unless (responded_to_ride.seats_total - responded_to_ride.seats_filled > 0)
       responded_to_ride.update_attributes(expiration: nil)
       @ridership = Ridership.where("ride_id = ? AND user_id = ?", responded_to_ride.id, responded_to_rider.id).first
-      @ridership.update_attributes(confirmed: true)
+      @ridership.update_attributes(status: 'accepted')
       RideStatusMailer.ride_accepted(responded_to_rider, responded_to_ride).deliver
 
       if current_user.paypal_email == nil
@@ -133,5 +133,11 @@ class RidesController < ApplicationController
   end
 
   def setup_paypal
+  end
+
+  def confirm
+    ride = Ride.find(params[:ride_id])
+    @driver = ride.driver
+    ride.riderships.where(user_id: current_user.id).first.update_attributes(status: 'confirmed')
   end
 end

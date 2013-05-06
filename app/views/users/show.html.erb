@@ -15,7 +15,8 @@
         <% current_user.rides_as_driver.each do |ride| %>
           <% if !ride.riders.empty? %>
             <% ride.riders.each do |rider| %>
-              <% if !Ridership.where("ride_id = ? AND user_id = ?", ride.id, rider.id).first.confirmed %>
+              <% if Ridership.where("ride_id = ? AND user_id = ?", ride.id, rider.id).first.status == 'booked' %>
+
                 <div class='alert alert-success'>
                   <a class='close' data-dismiss='alert'>&#215;</a>
                   <div class='row'>
@@ -37,8 +38,30 @@
                     </div>
                   </div>
                 </div>
+
               <% end %>
             <% end %>
+          <% end %>
+        <% end %>
+
+        <% current_user.rides_as_rider.each do |ride| %>
+          <% if Ridership.where("ride_id = ? AND user_id =? ", ride.id, current_user.id).first.status == 'accepted' %>
+
+            <div class='alert alert-success'>
+              <a class='close' data-dismiss='alert'>&#215;</a>
+              <div class='row'>
+                <div class='span1'>
+                  <%= image_tag ride.driver.image %>
+                </div>
+                <div class='span6'>
+                  <p>
+                  <%= ride.driver.name %> has accepted your request!
+                  </p>
+                  <%= link_to 'Confirm', confirm_ride_path(ride.id), class: 'btn btn-primary' %>
+                </div>
+              </div>
+            </div>
+
           <% end %>
         <% end %>
 

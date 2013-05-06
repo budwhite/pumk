@@ -6,5 +6,6 @@ $ ->
     $countdown.countdown {
       until: exp,
       compact: true,
-      layout: "<h3 class='text-error'>{hnn}{sep}{mnn}{sep}{snn}</h3>"
+      layout: "<h3 class='text-error'>{hnn}{sep}{mnn}{sep}{snn}</h3>",
+      timezone: -1
     }

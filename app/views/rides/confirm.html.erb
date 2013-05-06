@@ -1,0 +1,26 @@
+<div class='row'>
+  <div class='span12'>
+    <h2>Hooray! <%= @driver.first_name %> has accepted your request!</h2>
+    <p>
+     Here's <%= @driver.first_name %>'s email and phone number so you can get in contact directly: 
+    </p>
+  </div>
+</div>
+
+<div class='row'>
+  <div class='span1'>
+    <p>
+    <%= image_tag @driver.image %>
+    </p>
+  </div>
+  <div class='span4'>
+    <%= @driver.email %>
+    <%= @driver.phone_number %>
+  </div>
+</div>
+
+<div class='row'>
+  <div class='span8'>
+    <%= link_to 'Back to Home', user_path(current_user), class: 'btn btn-primary' %>
+  </div>
+</div>

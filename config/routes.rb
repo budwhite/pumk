@@ -8,6 +8,7 @@ Love::Application.routes.draw do
   resources :users, :only => [:show, :update]
   put '/rides/booked/', to: 'rides#booked', as: 'booked_ride'
   put '/rides/responded/', to: 'rides#responded', as: 'responded_to_ride'
+  get '/rides/confirm/:ride_id', to: 'rides#confirm', as: 'confirm_ride'
   resources :rides
   get '/rides/booking/:id', to: 'rides#booking', as: 'booking_ride'
   get '/rides/responding/:id', to: 'rides#responding', as: 'responding_to_ride'
