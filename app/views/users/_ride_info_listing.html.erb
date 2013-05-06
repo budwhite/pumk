@@ -44,7 +44,7 @@
     <div class='span2'>
       <h3>$<%= r.gas_money %> per ride</h3>
       <% if (r.driver_id != nil) && (r.riders.include? current_user) %>
-        <% ridership = Ridership.where("ride_id = ? AND user_id = ?", r.id, current_user.id).first %>
+        <% ridership = current_user.riderships.where(ride_id: r.id).first %>
         <% if ridership.status == 'booked' %>
           <% status_str = 'Pending' %>
         <% elsif ridership.status == 'accepted' %>

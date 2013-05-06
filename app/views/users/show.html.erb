@@ -15,7 +15,7 @@
         <% current_user.rides_as_driver.each do |ride| %>
           <% if !ride.riders.empty? %>
             <% ride.riders.each do |rider| %>
-              <% if Ridership.where("ride_id = ? AND user_id = ?", ride.id, rider.id).first.status == 'booked' %>
+              <% if rider.riderships.where(ride_id: ride.id).first.status == 'booked' %>
 
                 <div class='alert alert-success'>
                   <a class='close' data-dismiss='alert'>&#215;</a>
@@ -45,7 +45,7 @@
         <% end %>
 
         <% current_user.rides_as_rider.each do |ride| %>
-          <% if Ridership.where("ride_id = ? AND user_id =? ", ride.id, current_user.id).first.status == 'accepted' %>
+          <% if current_user.riderships.where(ride_id: ride.id).first.status == 'accepted' %>
 
             <div class='alert alert-success'>
               <a class='close' data-dismiss='alert'>&#215;</a>
