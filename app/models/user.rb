@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
          :omniauthable, :omniauth_providers => [:facebook]
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :name, :email, :password, :password_confirmation, :remember_me, :addresses_attributes, :children_attributes, :phone_number, :paypal_email
+  attr_accessible :provider, :uid, :name, :email, :password, :password_confirmation, :remember_me, :addresses_attributes, :children_attributes, :phone_number, :paypal_email, :gender
   # attr_accessible :title, :body
 
   has_many :addresses, dependent: :destroy
@@ -34,6 +34,7 @@ class User < ActiveRecord::Base
       user.image = auth.info.image
       user.oauth_token = auth.credentials.token
       user.oauth_expires_at = Time.at(auth.credentials.expires_at)
+      user.gender = auth.extra.raw_info.gender
     end
   end
 
@@ -43,5 +44,9 @@ class User < ActiveRecord::Base
         user.email = data["email"] if user.email.blank?
       end
     end
+  end
+
+  def profile_photo(type = 'normal')
+    self.image.split('=')[0] << "=#{type}"
   end
 end

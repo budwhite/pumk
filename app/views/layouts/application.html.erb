@@ -18,14 +18,15 @@
         <ul class='nav nav-pills pull-right'>
 
           <% if user_signed_in? %>
+            <li><%= image_tag current_user.profile_photo('small') %></li>
             <li><%= link_to 'Logged in as '+current_user.first_name, edit_user_registration_path %></li>
             <li><%= link_to 'Dashboard', user_path(current_user) %></li>
             <li class='active'><%= link_to 'Post a ride', new_ride_path %></li>
             <li><%= link_to "Logout", destroy_user_session_path, method: :delete, id: 'sign_out' %></li>
           <% else %>
             <li><%= link_to "Sign in with Facebook", '#', id: 'sign_in' %></li>
-            <li><%= link_to "Sign up", new_user_registration_path %></li>
-            <li><%= link_to "Login", new_user_session_path %></li>
+            <li><%# link_to "Sign up", new_user_registration_path %></li>
+            <li><%# link_to "Login", new_user_session_path %></li>
           <% end %>
 
           <%#<li><a href='#'>About</a></li>%>

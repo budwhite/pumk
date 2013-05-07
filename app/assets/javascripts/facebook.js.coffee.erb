@@ -1,21 +1,23 @@
 $ ->
   $('body').prepend "<div id='fb-root'></div>"
 
+  #making an ajax request to load the FB JS library
   $.ajax
-    url: window.location.protocol + "//connect.facebook.net/en_US/all.js",
+    url: "#{window.location.protocol}//connect.facebook.net/en_US/all.js",
     dataType: 'script',
     cache: true
 
+# once the FB JS is loaded, it will execute this function
+# 'cookie' set to true: the FB credentials will be accessible from the server side
 window.fbAsyncInit = ->
   FB.init(appId: '<%= ENV["FACEBOOK_APP_ID"] %>', status: true, cookie: true)
 
   $('#sign_in').click (e) ->
     e.preventDefault()
+    FB.login (response) ->
+      window.location = '<%= Rails.application.routes.url_helpers.send(:user_omniauth_callback_path, :facebook) %>'
 
-    FB.login ((response) ->
-      window.location = '<%= Rails.application.routes.url_helpers.send(:user_omniauth_callback_path, :facebook) %>'), { scope: 'email' }
-
-    $('#sign_out').click (e) ->
-      FB.getLoginStatus (response) ->
-        FB.logout() if response.authResponse
-      true
+  $('#sign_out').click (e) ->
+    FB.getLoginStatus (response) ->
+      FB.logout() if response.authResponse
+    true

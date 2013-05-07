@@ -213,8 +213,10 @@ Devise.setup do |config|
     ENV['FACEBOOK_APP_ID'], 
     ENV['FACEBOOK_APP_SECRET'],
     {
-      :display => 'popup', 
-      :provider_ignores_state => true 
+      display: 'popup', 
+      provider_ignores_state: true,
+      image_size: 'normal',
+      scope: 'email' 
       #:client_options => {:ssl => {:ca_path => "/etc/ssl/certs"}}
     }
 
