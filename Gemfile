@@ -19,6 +19,7 @@ group :assets do
   gem 'sass-rails'
   gem 'twitter-bootstrap-rails'
   gem 'coffee-rails'
+  gem 'uglifier'
 end
 
 gem 'rails', '~> 3.2.13'
