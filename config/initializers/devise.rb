@@ -228,7 +228,8 @@ Devise.setup do |config|
         display: 'popup', 
         provider_ignores_state: true,
         image_size: 'normal',
-        scope: 'email' 
+        scope: 'email',
+        client_options: {:ssl => {:ca_file => '/usr/lib/ssl/certs/ca-certificates.crt' }}
       }
   end
 
