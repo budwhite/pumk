@@ -21,6 +21,7 @@
             <li><%= link_to 'Logged in as '+current_user.first_name, edit_user_registration_path %></li>
             <li><%= image_tag current_user.profile_photo('small'), class: 'img-circle' %></li>
             <li><%= link_to 'Dashboard', user_path(current_user) %></li>
+            <li class='active'><%= link_to 'Find a ride', rides_path %></li>
             <li class='active'><%= link_to 'Post a ride', new_ride_path %></li>
             <li><%= link_to "Logout", destroy_user_session_path, method: :delete, id: 'sign_out' %></li>
           <% else %>

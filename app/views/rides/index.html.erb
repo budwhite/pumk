@@ -1,17 +1,25 @@
 <% howmany = @rides.count %>
 <div class='page-header'>
   <h2>
-    Showing <%= pluralize(howmany, 'match') %>
+    Showing <%= pluralize(howmany, 'ride') %>
     <small>Sort by distance to your home</small>
   </h2>
 </div>
 
 <% @rides.each do |r| %>
 
+  <% if !r.driver_id.nil? %>
+    <% ride_creator = r.driver %>
+    <% ride_creator_type = 'driver' %>
+  <% else %>
+    <% ride_creator = r.riders.first %>
+    <% ride_creator_type = 'rider' %>
+  <% end %>
+
   <div class='row'>
     <div class='span2'>
       <a href='#' class='thumbnail'>
-        <%= image_tag(r.driver.image) %>
+        <%= image_tag ride_creator.profile_photo('normal') %>
       </a>
     </div>
     <div class='span6'>
@@ -19,9 +27,9 @@
         <div class='span4'>
           <h4>
             <span class='text-info'>
-              <strong><%= r.driver.name %></strong>
+              <strong><%= ride_creator.name %></strong>
             </span> 
-            <% if r.driver_id != nil %>
+            <% if ride_creator_type.eql? 'driver' %>
               offering to drive
             <% else %>
               looking for help

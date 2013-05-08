@@ -2,12 +2,13 @@ class RidesController < ApplicationController
   include IceCube
 
   def index
-    ride = Ride.find(params[:current_ride])
-    if ride.driver_id == nil
-      @rides = Ride.all.select { |r| r.driver_id != nil }
-    else
-      @rides = Ride.where(driver_id: nil).to_a
-    end
+    @rides = Ride.all
+    #ride = Ride.find(params[:current_ride])
+    #if ride.driver_id == nil
+      #@rides = Ride.all.select { |r| r.driver_id != nil }
+    #else
+      #@rides = Ride.where(driver_id: nil).to_a
+    #end
   end
 
   def show
