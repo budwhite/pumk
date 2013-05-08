@@ -1,5 +1,10 @@
+<div class="page-header">
+  <h1>Posting a new ride</h1>
+</div>
+
 <%= simple_form_for @ride, :html => { :class => 'form-horizontal' } do |f| %>
 
+  <h4>Do you need help or want to help out?</h4>
   <% creator_types = ['offering to drive?', 'looking for help with drop-off or pick-up?'] %>
   <%= f.input :creator_type, 
     label: 'Are you',
@@ -34,4 +39,5 @@
   <%= f.input :seats_total, label: '# of available seats on your car', selected: 1,
     collection: 1..4, input_html: { class: 'input-mini' } %>
   <%= f.button :submit, 'Post Ride!', :class => 'btn-success' %>
+
 <% end %>

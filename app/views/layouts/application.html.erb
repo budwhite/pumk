@@ -4,7 +4,7 @@
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=Edge,chrome=1'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title><%= content_for?(:title) ? yield(:title) : 'We <3 kids!' %></title>
+    <title><%= content_for?(:title) ? yield(:title) : 'Go Chargers!' %></title>
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag 'application', :media => 'all' %>
     <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
         <ul class='nav nav-pills pull-right'>
 
           <% if user_signed_in? %>
-            <li><%= image_tag current_user.profile_photo('small') %></li>
             <li><%= link_to 'Logged in as '+current_user.first_name, edit_user_registration_path %></li>
+            <li><%= image_tag current_user.profile_photo('small'), class: 'img-circle' %></li>
             <li><%= link_to 'Dashboard', user_path(current_user) %></li>
             <li class='active'><%= link_to 'Post a ride', new_ride_path %></li>
             <li><%= link_to "Logout", destroy_user_session_path, method: :delete, id: 'sign_out' %></li>
@@ -32,13 +32,13 @@
           <%#<li><a href='#'>About</a></li>%>
           <%#<li><a href='#'>Contact</a></li>%>
         </ul>
-        <h3 class='muted'>
+        <h3>
           <%= link_to root_path, class: 'brand' do %>
             <%= image_tag('logo.png', :alt => 'logo') %>
           <% end %>
+          <span style='font-size:14px' class='lead text-error'>for Cherry Crest</span>
         </h3>
       </div>
-      <hr>
 
       <%= yield %>
       <hr>

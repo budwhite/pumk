@@ -23,4 +23,9 @@ en:
     #   defaults:
     #     username: 'User name to sign in.'
     #     password: 'No special characters, please.'
+    options:
+      user:
+        gender:
+          male: 'Boy'
+          female: 'Girl'
 

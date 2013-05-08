@@ -1,4 +1,6 @@
 <div class='row'>
+  <% if current_user.addresses.empty? && current_user.children.empty? %>
+
   <div class='span8'>
     <h2>Completing Registration</h2>
     <%= simple_form_for current_user, :html => { :class => 'form-horizontal' } do |f| %>
@@ -12,25 +14,25 @@
           <%= addresses_form.input :name, as: :hidden, input_html: { value: 'Home' } %>
         <% end %>
       <% end %>
-      <%= field_set_tag 'Tell us about your kid!' do %>
+      <%= field_set_tag 'Tell us about your kids!' do %>
         <%= f.simple_fields_for :children do |children_form| %>
           <%= children_form.input :name %>
-          <%= children_form.input :grade %>
+          <%= f.input :gender, collection: [:male, :female] %>
+          <%= children_form.input :grade, collection: Child::GRADE_TYPES, input_html: { class: 'input-mini' } %>
           <%= children_form.input :teacher %>
         <% end %>
       <% end %>
       <%= f.submit 'Submit', :class => 'btn btn-primary'  %>
     <% end %>
-
-    <%= link_to "Back", :back %>
   </div>
+
   <div class='span4'>
     <br></br>
     <br></br>
     <br></br>
     <div class='alert alert-info'>
       <p class='lead'>
-        Why are we asking for your address?
+      Why are we asking for your address?
       </p>
       <p>
       <small>
@@ -44,7 +46,7 @@
     <br></br>
     <div class='alert alert-info'>
       <p class='lead'>
-        Why tell us about your kid?
+      Why tell us about your kid?
       </p>
       <p>
       <small>
@@ -53,4 +55,40 @@
       </p>
     </div>
   </div>
+
+
+  <% else %>
+    <div class='page-header'>
+      <h1>Editing Your Profile</h1>
+    </div>
+    <h3>Your <%= pluralize(current_user.addresses.count, 'address').split[1] %></h3>
+    <table class='table table-striped'>
+      <thead>
+        <tr>
+          <th><%= Address.human_attribute_name(:name) %></th>
+          <th><%= Address.human_attribute_name(:street1) %></th>
+          <th><%= Address.human_attribute_name(:city) %></th>
+          <th><%= Address.human_attribute_name(:zipcode) %></th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% current_user.addresses.each do | address| %>
+          <tr>
+            <td><%= address.name %></td>
+            <td><%= address.street1 %></td>
+            <td><%= address.city %></td>
+            <td><%= address.zipcode %></td>
+            <td>
+              <%= link_to 'Edit', '#', class: 'btn' %>
+              <%= link_to 'Delete', '#', class: 'btn btn-danger' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <%= link_to 'Add another address', '#', class: 'btn btn-primary' %>
+
+    <h3>Your <%= pluralize(current_user.children.count, 'kid').split[1] %></h3>
+  <% end %>
 </div>
