@@ -229,7 +229,10 @@ Devise.setup do |config|
         provider_ignores_state: true,
         image_size: 'normal',
         scope: 'email',
-        client_options: {:ssl => {:ca_file => '/usr/lib/ssl/certs/ca-certificates.crt' }}
+        client_options: { ssl: {
+          ca_file: '/usr/lib/ssl/certs/ca-certificates.crt',
+          ca_path: '/etc/ssl/certs'
+        }}
       }
   end
 
