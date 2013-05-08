@@ -208,17 +208,29 @@ Devise.setup do |config|
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
   # regarding :provider_ignores_state, refer to 
   # https://github.com/mkdynamic/omniauth-facebook/issues/75
-  OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE if Rails.env.development?
-  config.omniauth :facebook, 
-    ENV['FACEBOOK_APP_ID'], 
-    ENV['FACEBOOK_APP_SECRET'],
-    {
-      display: 'popup', 
-      provider_ignores_state: true,
-      image_size: 'normal',
-      scope: 'email' 
-      #:client_options => {:ssl => {:ca_path => "/etc/ssl/certs"}}
-    }
+
+  if Rails.env.development? || Rails.env.test?
+    OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+    config.omniauth :facebook, 
+      ENV['DEVELOPMENT_FACEBOOK_APP_ID'], 
+      ENV['DEVELOPMENT_FACEBOOK_APP_SECRET'],
+      {
+        display: 'popup', 
+        provider_ignores_state: true,
+        image_size: 'normal',
+        scope: 'email' 
+      }
+  else
+    config.omniauth :facebook, 
+      ENV['PRODUCTION_FACEBOOK_APP_ID'], 
+      ENV['PRODUCTION_FACEBOOK_APP_SECRET'],
+      {
+        display: 'popup', 
+        provider_ignores_state: true,
+        image_size: 'normal',
+        scope: 'email' 
+      }
+  end
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
