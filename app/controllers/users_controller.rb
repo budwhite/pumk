@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   def show
     if current_user.sign_in_count == 1
       unless session[:already_welcomed]
-        flash.now[:success] = 'Welcome to PickUpMyKid.com!'
+        flash.now[:success] = 'Welcome to PickUpMyKid!'
         session[:already_welcomed] = true
       end
     end

@@ -13,12 +13,12 @@
 <div class='row'>
   <div class='span1'>
     <p>
-    <%= image_tag rider.image %>
+    <%= image_tag rider.profile_photo('normal'), class: 'img-polaroid' %>
     </p>
   </div>
   <div class='span4'>
-    <%= rider.email %>
-    <%= rider.phone_number %>
+    <strong><%= rider.email %></strong>
+    <strong><%= rider.phone_number %></strong>
   </div>
 </div>
 

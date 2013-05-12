@@ -18,12 +18,29 @@
         <ul class='nav nav-pills pull-right'>
 
           <% if user_signed_in? %>
-            <li><%= link_to 'Logged in as '+current_user.first_name, edit_user_registration_path %></li>
-            <li><%= image_tag current_user.profile_photo('small'), class: 'img-circle' %></li>
             <li><%= link_to 'Dashboard', user_path(current_user) %></li>
             <li class='active'><%= link_to 'Find a ride', rides_path %></li>
             <li class='active'><%= link_to 'Post a ride', new_ride_path %></li>
-            <li><%= link_to "Logout", destroy_user_session_path, method: :delete, id: 'sign_out' %></li>
+            <li class='dropdown'>
+            <a class='dropdown-toggle' data-toggle='dropdown' href='#'>
+              <%= current_user.first_name %>
+              <b class='caret'></b>
+            </a>
+            <ul class='dropdown-menu'>
+              <li>
+              <%= link_to edit_user_registration_path do %> 
+                <i class='icon-user'></i>
+                View / edit profile
+              <% end %>
+              </li>
+              <li>
+              <%= link_to destroy_user_session_path, method: :delete, id: 'sign_out' do %>
+                <i class='icon-off'></i>
+                Log out
+              <% end %>
+              </li>
+            </ul>
+            </li>
           <% else %>
             <li><%= link_to "Sign in with Facebook", '#', id: 'sign_in' %></li>
             <li><%# link_to "Sign up", new_user_registration_path %></li>

@@ -1,30 +1,42 @@
+<% if !r.driver_id.nil? %>
+  <% ride_creator = r.driver %>
+  <% ride_creator_type = 'driver' %>
+<% else %>
+  <% ride_creator = r.riders.first %>
+  <% ride_creator_type = 'rider' %>
+<% end %>
+
 <hr></hr>
 <div class='container'>
   <div class='row'>
     <div class='span6'>
       <h4>
-        <% if r.driver_id != nil %>
-          <span class='text-info'>
-            <strong><%= r.driver.name %></strong>
-          </span> 
+        <span class='text-info'>
+          <%= ride_creator.first_name %> <%= ride_creator.last_name[0] %>
+        </span>
+        <% if ride_creator_type == 'driver'%>
           offering to drive
         <% else %>
-          <span class='text-info'>
-            <strong><%= current_user.name %></strong>
-          </span> 
-          looking for help
+          <% child = Child.find(ride_creator.riderships.where(ride_id: r.id).first.child_id) %>
+          looking for help for 
+          <%= pronoun(ride_creator) %> <%= son_or_daughter(child) %>
+          <%= child.name.capitalize %>
         <% end %>
       </h4>
       <p>
-      <span class='label label-inverse'>
+      <span class='label label-success'>
         <%= r.ride_type %> Ride
       </span>
       </p>
       <p>
-      From <i class='icon-map-marker icon-large' style='color: green;'></i> <%= r.origin_address.full_street_address %>
+      <span class='label label-inverse'>From</span> 
+      <i class='icon-map-marker icon-large' style='color: green;'></i> 
+      <%= r.origin_address.full_street_address %>
       </p>
       <p>
-      To <i class='icon-map-marker icon-large' style='color: red;'></i> <%= r.destination_address.name %>
+      <span class='label label-inverse'>To</span> 
+      <i class='icon-map-marker icon-large' style='color: red;'></i> 
+      <%= r.destination_address.name %>
       </p>
       <p>
       <% if r.ride_type.downcase.include? 'drop-off' %>
@@ -42,36 +54,28 @@
       <% end %>
     </div>
     <div class='span2'>
-      <h3>$<%= r.gas_money %> per ride</h3>
-      <% if (r.driver_id != nil) && (r.riders.include? current_user) %>
-        <% ridership = current_user.riderships.where(ride_id: r.id).first %>
-        <% if ridership.status == 'booked' %>
-          <% status_str = 'Pending' %>
-        <% elsif ridership.status == 'accepted' %>
-          <% status_str = 'Accepted' %>
-        <% elsif ridership.status == 'confirmed' %>
-          <% status_str = 'Confirmed' %>
-        <% end %>
+      <% if ride_creator_type == 'driver' %>
+        <% leading_text = 'Asking for' %>
       <% else %>
-        <% status_str = 'More info' %>
+        <% leading_text = 'Willing to pay' %>
       <% end %>
-      <%= link_to status_str, '#', class: 'btn btn-primary' %>
+      <span class='label label-important'><%= leading_text %></span>
+      <h3>$<%= r.gas_money %> per ride</h3>
+      <%= link_to 'More info', ride_path(r.id), class: 'btn btn-primary' %>
     </div>
   </div>
   <div class='row'>
     <div class='span7'>
-      <%= link_to rides_path(current_ride: r.id), class: 'btn btn-primary' do %>
-        <i class='icon-group icon-large'></i>
-        Match List 
-      <% end %>
-      <%= link_to '#', class: 'btn btn-primary' do %>
-        <i class='icon-edit icon-large'></i>
-        Edit Ride 
-      <% end %>
-      <%= link_to r, method: 'delete', class: 'btn btn-danger',
-        data: { confirm: "You sure?" } do %>
-          <i class='icon-remove icon-large'></i>
-          Cancel Ride 
+      <% if ride_creator == current_user %>
+        <%= link_to '#', class: 'btn btn-primary' do %>
+          <i class='icon-edit icon-large'></i>
+          Edit Ride 
+        <% end %>
+        <%= link_to r, method: 'delete', class: 'btn btn-danger',
+          data: { confirm: "You sure?" } do %>
+            <i class='icon-remove icon-large'></i>
+            Cancel Ride 
+        <% end %>
       <% end %>
     </div>
   </div>

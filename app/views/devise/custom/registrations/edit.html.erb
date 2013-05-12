@@ -1,61 +1,69 @@
 <div class='row'>
-  <% if current_user.addresses.empty? && current_user.children.empty? %>
+  <% if current_user.addresses.count==0 && current_user.children.count==0 %>
+  <%#if true %>
 
-  <div class='span8'>
-    <h2>Completing Registration</h2>
-    <%= simple_form_for current_user, :html => { :class => 'form-horizontal' } do |f| %>
-      <%= field_set_tag 'Where do you live?' do %>
-        <%= f.simple_fields_for :addresses do |addresses_form| %>
-          <%= addresses_form.input :street1 %>
-          <%= addresses_form.input :street2 %>
-          <%= addresses_form.input :city %>
-          <%= addresses_form.input :state %>
-          <%= addresses_form.input :zipcode %>
-          <%= addresses_form.input :name, as: :hidden, input_html: { value: 'Home' } %>
-        <% end %>
-      <% end %>
-      <%= field_set_tag 'Tell us about your kids!' do %>
-        <%= f.simple_fields_for :children do |children_form| %>
-          <%= children_form.input :name %>
-          <%= f.input :gender, collection: [:male, :female] %>
-          <%= children_form.input :grade, collection: Child::GRADE_TYPES, input_html: { class: 'input-mini' } %>
-          <%= children_form.input :teacher %>
-        <% end %>
-      <% end %>
-      <%= f.submit 'Submit', :class => 'btn btn-primary'  %>
-    <% end %>
-  </div>
-
-  <div class='span4'>
-    <br></br>
-    <br></br>
-    <br></br>
-    <div class='alert alert-info'>
-      <p class='lead'>
-      Why are we asking for your address?
-      </p>
-      <p>
-      <small>
-        We find carpool matches that are physically closest to you.
-      </small>
-      </p>
+    <div class='span2'>
+      <br></br>
+      <div class='thumbnail'>
+        <%= image_tag(current_user.profile_photo('large')) %>
+        <h3><%= current_user.first_name %> <%= current_user.last_name[0] %></h3>
+      </div>
     </div>
-    <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <div class='alert alert-info'>
-      <p class='lead'>
-      Why tell us about your kid?
-      </p>
-      <p>
-      <small>
-        This is an effort ot make sure everyone is a genuine member of your school community.
-      </small>
-      </p>
-    </div>
-  </div>
 
+    <div class='span6'>
+      <h2>Completing Registration</h2>
+      <%= simple_form_for current_user, :html => { :class => 'form-horizontal' } do |f| %>
+        <%= field_set_tag 'Where do you live?' do %>
+          <%= f.simple_fields_for :addresses do |addresses_form| %>
+            <%= addresses_form.input :street1 %>
+            <%= addresses_form.input :street2 %>
+            <%= addresses_form.input :city %>
+            <%= addresses_form.input :state %>
+            <%= addresses_form.input :zipcode %>
+            <%= addresses_form.input :name, as: :hidden, input_html: { value: 'Home' } %>
+          <% end %>
+        <% end %>
+        <%= field_set_tag 'Tell us about your kids!' do %>
+          <%= f.simple_fields_for :children do |children_form| %>
+            <%= children_form.input :name %>
+            <%= children_form.input :gender, collection: ['boy', 'girl'], default: 'boy' %>
+            <%= children_form.input :grade, collection: Child::GRADE_TYPES, input_html: { class: 'input-mini' } %>
+            <%= children_form.input :teacher %>
+          <% end %>
+        <% end %>
+        <%= f.submit 'Submit', :class => 'btn btn-primary'  %>
+      <% end %>
+    </div>
+
+    <div class='span4'>
+      <br></br>
+      <br></br>
+      <br></br>
+      <div class='alert alert-info'>
+        <p class='lead'>
+        Why are we asking for your address?
+        </p>
+        <p>
+        <small>
+          We find carpool matches that are physically closest to you.
+        </small>
+        </p>
+      </div>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <div class='alert alert-info'>
+        <p class='lead'>
+        Why tell us about your kid?
+        </p>
+        <p>
+        <small>
+          This is an effort ot make sure everyone is a genuine member of your school community.
+        </small>
+        </p>
+      </div>
+    </div>
 
   <% else %>
     <div class='page-header'>

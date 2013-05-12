@@ -12,6 +12,12 @@
     collection: creator_types,
     checked: creator_types.first %>
 
+  <%= f.input :for_which_child,
+    label: 'For which child',
+    as: :select,
+    collection: current_user.children.collect { |x| x[:name].capitalize },
+    selected: 1 %>
+
   <h4 class='ride-type-question'>What kind of ride are you offering?</h4>
 
   <%= f.input :ride_type, collection: Ride::RIDE_TYPES, as: :radio_buttons, :item_wrapper_class => 'inline', checked: Ride::RIDE_TYPES.first %>
@@ -38,6 +44,6 @@
     collection: 0..20, input_html: { class: 'input-mini' } %>
   <%= f.input :seats_total, label: '# of available seats on your car', selected: 1,
     collection: 1..4, input_html: { class: 'input-mini' } %>
-  <%= f.button :submit, 'Post Ride!', :class => 'btn-success' %>
+  <%= f.button :submit, 'Post Ride!', :class => 'btn btn-primary' %>
 
 <% end %>

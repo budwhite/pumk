@@ -1,8 +1,7 @@
 <% howmany = @rides.count %>
 <div class='page-header'>
-  <h2>
-    Showing <%= pluralize(howmany, 'ride') %>
-    <small>Sort by distance to your home</small>
+  <h2>Showing <%= pluralize(howmany, 'ride') %>
+    <small class='pull-right'>Sort by distance to your home</small>
   </h2>
 </div>
 
@@ -18,39 +17,49 @@
 
   <div class='row'>
     <div class='span2'>
-      <a href='#' class='thumbnail'>
-        <%= image_tag ride_creator.profile_photo('normal') %>
-      </a>
+      <%= image_tag ride_creator.profile_photo('large'), class: 'img-polaroid' %>
     </div>
     <div class='span6'>
       <div class='row'>
         <div class='span4'>
           <h4>
             <span class='text-info'>
-              <strong><%= ride_creator.name %></strong>
+              <strong><%= ride_creator.first_name %> <%= ride_creator.last_name[0] %></strong>
             </span> 
             <% if ride_creator_type.eql? 'driver' %>
-              offering to drive
+              is a parent driver
             <% else %>
-              looking for help
+              <% child = Child.find(ride_creator.riderships.where(ride_id: r.id).first.child_id) %>
+              's <%= son_or_daughter(child) %>
+              <span class='text-info'><%= child.name.split[0].capitalize %></span>
+              is a passenger
             <% end %>
           </h4>
           <p>
-          <span class='label label-inverse'>
+          <span class='label label-success'>
             <%= r.ride_type %> Ride
           </span>
           </p>
           <p>
-          From <i class='icon-map-marker icon-large' style='color: green;'></i> 
+          <span class='label label-inverse'>From</span> 
+          <i class='icon-map-marker icon-large' style='color: green;'></i> 
           <%= r.origin_address.full_street_address %>
           </p>
           <p>
-          To <i class='icon-map-marker icon-large' style='color: red;'></i> <%= r.destination_address.name %>
+          <span class='label label-inverse'>To</span> 
+          <i class='icon-map-marker icon-large' style='color: red;'></i> <%= r.destination_address.name %>
           </p>
         </div>
         <div class='span2'>
-          <h3>$<%= r.gas_money %> per ride</h3>
-          <%= link_to 'More info', ride_path(r.id), class: 'btn btn-primary' %>
+          <% if ride_creator_type == 'driver' %>
+            <span class='label label-important'>Asking for</span>
+            <h3>$<%= r.gas_money %> per ride</h3>
+            <%= link_to 'More info', ride_path(r.id), class: 'btn btn-primary' %>
+          <% else %>
+            <span class='label label-important'>Willing to pay</span>
+            <h3>$<%= r.gas_money %> per ride</h3>
+            <%= link_to 'More info', ride_path(r.id), class: 'btn btn-primary' %>
+          <% end %>
         </div>
       </div>
       
@@ -59,15 +68,19 @@
         <% then leading_text = 'Arriving at' %>
         <% else leading_text = 'Leaving at' %>
       <% end %>
-      <%= leading_text %>
-      <%= r.schedule.start_time.strftime('%H:%M %P') %>
-      <%= r.schedule %>
+      <strong>
+        <%= leading_text %>
+        <%= r.schedule.start_time.strftime('%H:%M %P') %>
+        <%= r.schedule %>
+      </strong>
       </p>
       <p>
       <% if not r.schedule1.recurrence_rules.empty? %>
-        And <%= leading_text.downcase %>
+        <strong>
+          And <%= leading_text.downcase %>
         <%= r.schedule1.start_time.strftime('%H:%M %P') %>
         <%= r.schedule1 %>
+      </strong>
       <% end %>
       </p>
       
@@ -80,3 +93,13 @@
     </div>
   </div>
 <% end %>
+
+<div class='row well'>
+  <span class='span5 offset2'>
+    <p class='lead'>Didn't find what you were looking for?</p>
+    <p>Post a ride as a parent driver or for your child passenger.</p>
+  </span>
+  <div class='span2'>
+    <%= link_to 'Post a ride', new_ride_path, class: 'btn btn-primary' %>
+  </div>
+</div>

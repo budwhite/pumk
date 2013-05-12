@@ -10,12 +10,12 @@
 <div class='row'>
   <div class='span1'>
     <p>
-    <%= image_tag @driver.image %>
+    <%= image_tag @driver.profile_photo('normal') %>
     </p>
   </div>
   <div class='span4'>
-    <%= @driver.email %>
-    <%= @driver.phone_number %>
+    <strong><%= @driver.email %></strong>
+    <strong><%= @driver.phone_number %></strong>
   </div>
 </div>
 

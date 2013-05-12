@@ -1,3 +1,4 @@
+<% debugger %>
 $ ->
   $('body').prepend "<div id='fb-root'></div>"
 
@@ -14,8 +15,8 @@ window.fbAsyncInit = ->
 
   $('#sign_in').click (e) ->
     e.preventDefault()
-    FB.login (response) ->
-      window.location = '/users/auth/facebook/callback' if response.authResponse
+    FB.login ((response) ->
+      window.location = '/users/auth/facebook/callback' if response.authResponse), { scope: 'email' }
 
   $('#sign_out').click (e) ->
     FB.getLoginStatus (response) ->

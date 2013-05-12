@@ -1,6 +1,14 @@
 class Child < ActiveRecord::Base
   attr_accessible :first_name, :grade, :last_name, :name, :teacher, :gender
 
+  before_save do
+    if self.gender == 'boy'
+      self.gender = 'male'
+    elsif self.gender == 'girl'
+      self.gender = 'female'
+    end
+  end
+
   belongs_to :user
 
   validates :name, :grade, :teacher, presence: true

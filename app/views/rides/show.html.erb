@@ -1,76 +1,164 @@
+<% r = @ride %>
+
+<% if !r.driver_id.nil? %>
+  <% ride_creator = r.driver %>
+  <% ride_creator_type = 'driver' %>
+<% else %>
+  <% ride_creator = r.riders.first %>
+  <% ride_creator_type = 'rider' %>
+<% end %>
+
+<div class='row'>
+  <div class='span3'>
+    <%= link_to :back, class: 'btn' do %>
+      <i class='icon-arrow-left'></i>
+      Back to rides list
+    <% end %>
+  </div>
+</div>
+
 <div class='row'>
   <div class='span12'>
-    <h2><%= @ride.ride_type %> Trip</h2>
-    <p>
-    <%= @ride.origin_address.full_street_address %> 
-    to
-    <%= @ride.destination_address.name %>
-    </p>
-    <p>
-    <% if @ride.ride_type.downcase.include? 'drop-off' %>
-      <% then leading_text = 'Arriving at' %>
-      <% else leading_text = 'Leaving at' %>
-    <% end %>
-    <%= leading_text %>
-    <%= @ride.schedule.start_time.strftime('%H:%M %P') %>
-    <%= @ride.schedule %>
-    </p>
-    <p>
-    <% if not @ride.schedule1.recurrence_rules.empty? %>
-      And <%= leading_text.downcase %>
-      <%= @ride.schedule1.start_time.strftime('%H:%M %P') %>
-      <%= @ride.schedule1 %>
-    <% end %>
-    </p>
+    <h3>
+      <%= r.origin_address.street1 %> <%= r.origin_address.city %>
+      <i class='icon-arrow-right icon-large'></i>
+      <%= r.destination_address.name %>
+    </h3>
   </div>
 </div>
 
 <div class='row'>
-  <div class='span2'>
-    <a href='#' class='thumbnail'>
-      <%= image_tag @ride.driver.image %>
-    </a>
-    <%= link_to 'Contact me', '#', class: 'btn btn-primary' %>
-  </div>
-  <div class='span6'>
-    <h4>
-      <%= @ride.driver.first_name %> <%= @ride.driver.last_name %>
-      <small>
-        is your driver
-      </small>
-    </h4>
-    <% @ride.driver.children.each do |c| %>
-      <p>His son <%= c.name %> is at grade <%= c.grade %> in <%= c.teacher %>'s class.</p>
+  <div class='span8 well'>
+    <strong>
+      <p>
+      <% if r.ride_type.downcase.include? 'drop-off' %>
+        <% then leading_text = 'Arriving at' %>
+        <% else leading_text = 'Leaving at' %>
+        <% end %>
+        <%= leading_text %>
+        <%= r.schedule.start_time.strftime('%H:%M %P') %>
+        <%= r.schedule %>
+        </p>
+        <p>
+        <% if not r.schedule1.recurrence_rules.empty? %>
+          And <%= leading_text.downcase %>
+        <%= r.schedule1.start_time.strftime('%H:%M %P') %>
+        <%= r.schedule1 %>
+      <% end %>
+      </p>
+    </strong>
+    <% if ride_creator_type == 'driver' %>
+      <strong>Riders and Seats</strong>
+      <p>
+      <% seats_left = r.seats_total - r.seats_filled %>
+      <%= seats_left %> <%= pluralize(seats_left, 'seat').split[1] %> left.
+      </p>
     <% end %>
-    <p>You have X Facebook friends in common. </p>
-    <p><i class='icon-ok icon-large'></i>Verified parent of Cherry Crest Elementary.</p>
-  </div>
-</div>
-
-<div class='row'>
-  <div class='span8'>
     <div class='map-canvas big' 
-      data-lat= '<%= @ride.origin_address.latitude %>'
-      data-lng= '<%= @ride.origin_address.longitude %>' >
+      data-lat= '<%= r.origin_address.latitude %>'
+      data-lng= '<%= r.origin_address.longitude %>' >
     </div>
   </div>
-  <div class='span2'>
-    <p>$<%= @ride.gas_money %> per ride</p>
-    <p>Or $<%= @ride.gas_money * 5 %> weekly</p>
 
-    <% seats_left = @ride.seats_total - @ride.seats_filled %>
-    <% if seats_left > 0 %>
-      <p><%= pluralize(seats_left, 'seat') %> left</p>
-      <%= link_to booking_ride_path(@ride.id), class: 'btn btn-primary' do %>
-        <i class='icon-shopping-cart icon-large'></i>
-        Book It!
-      <% end %>
-    <% else %>
-      <p>No seats left!</p>
-      <%= link_to '#', class: 'btn btn-primary disabled' do %>
-        <i class='icon-shopping-cart icon-large'></i>
-        Book It!
-      <% end %>
+  <div class='span3'>
+    <% if ride_creator_type == 'driver' %>
+      <div class='well span3'>
+        <% if r.riders.include? current_user %>
+          <% ridership = r.riderships.where(user_id: current_user.id).first %>
+          <% if ridership.expiration > Time.now %>
+            <strong>Booking status:</strong>
+            <span class='label label-info'>
+              <% if ridership.status == 'booked' %>
+                Pending
+              <% else %>
+                Accepted
+              <% end %>
+            </span>
+            <p>You've already initiated a booking for this ride.</p>
+            <p>Time left to respond:</p>
+            <div class='countdown' data-expiration='<%= ridership.expiration.to_i %>' >
+            </div>
+            <%= link_to '#', class: 'btn btn-danger btn-block' do %>
+              <i class='icon-remove icon-large'></i>
+              Cancel Request
+            <% end %>
+          <% else %>
+            <strong>Booking status:</strong>
+            <span class='label label-error'>Expired</span>
+          <% end %>
+        <% else %>
+          <strong>For which child:</strong>
+          <select class='which-child span3'>
+            <% current_user.children.each do |c| %>
+              <option><%= c.name.split[0].capitalize %></option>
+            <% end %>
+          </select>
+          <h4>$<%= r.gas_money %> per ride</h4>
+          <button class='book-it btn btn-success btn-block' data-ride-id='<%= r.id %>'>
+            <i class='icon-shopping-cart icon-large'></i>
+            Book It!
+          </button>
+        <% end %>
+      </div>
     <% end %>
+
+    <div class='span3'>
+      <%= image_tag ride_creator.profile_photo('normal'), class: 'img-polaroid pull-left' %>
+      <p><strong>
+        <% if ride_creator_type == 'driver' %>
+          Parent Driver
+        <% else %>
+          Parent of Passenger
+        <% end %>
+      </strong></p>
+      <%= link_to user_path(ride_creator.id) do %> 
+        <%= ride_creator.first_name %> <%= ride_creator.last_name[0].capitalize %>
+      <% end %>
+      <br></br>
+      <br></br>
+      <div>
+        <i class='icon-ok icon-large'></i>
+        <div class='label label-success'>Facebook connected</div>
+      </div>
+      <div>
+        <i class='icon-ok icon-large'></i>
+        <div class='label label-success'>Verified parent</div>
+      </div>
+      <hr></hr>
+      <% if ride_creator_type == 'driver' %>
+        <% children = ride_creator.children %>
+        <strong>
+          <%= ride_creator.first_name %> has <%= pluralize(children.count, 'child') %>
+        </strong>
+        <% children.each do |child| %>
+          <% if child.gender == 'female' %>
+            <%= image_tag '/assets/default_female.jpg', class: 'img-polaroid pull-left' %>
+          <% else %>
+            <%= image_tag '/assets/default_male.jpg', class: 'img-polaroid pull-left' %>
+          <% end %>
+          <strong>
+            <p><%= child.name.capitalize %></p> 
+            <p>Grade <%= child.grade %></p>
+          </strong>
+        <% end %>
+      <% else %>
+        <% ridership = r.riderships.where(user_id: ride_creator.id).first %>
+        <% child = Child.find(ridership.child_id) %>
+        <% if child.gender == 'female' %>
+          <%= image_tag '/assets/default_female.jpg', class: 'img-polaroid pull-left' %>
+        <% else %>
+          <%= image_tag '/assets/default_male.jpg', class: 'img-polaroid pull-left' %>
+        <% end %>
+        <strong>
+          <p>Passenger</p>
+          <p><%= child.name.capitalize %></p> 
+        </strong>
+        <br></br>
+        <strong>
+          <p>Grade <%= child.grade %></p>
+          <p>Teacher <%= child.teacher %></p>
+        </strong>
+      <% end %>
+    </div>
   </div>
 </div>

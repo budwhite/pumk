@@ -1,37 +1,49 @@
 <div class='row'>
 
-  <div class='span8'>
-    <div class=''>
-      <div class=''>
-        <h3>Hi <%= current_user.first_name %>!</h3>
+  <div class='span9'>
+    <div class='row'>
+
+      <div class='span2'>
+        <%= image_tag(current_user.profile_photo('large'), class: 'img-polaroid') %>
+        <div class='text-center'>
+          <%= link_to 'My Profile', edit_user_registration_path %>
+        </div>
+      </div>
+
+      <div class='span7'>
+        <h2>Hi, <%= current_user.first_name %>!</h2>
+        <hr></hr>
 
         <% flash.each do |name, msg| %>
-          <div class='alert alert-<%= name %>'>
-            <a class='close' data-dismiss='alert'>&#215;</a>
-            <%= content_tag :div, msg, id: "flash_#{name}" %>
-          </div>
+          <% if name == :partial %>
+            <%= render partial: msg %>
+          <% else %>
+            <div class='alert alert-<%= name %>'>
+              <a class='close' data-dismiss='alert'>&#215;</a>
+              <%= content_tag :div, msg, id: "flash_#{name}" %>
+            </div>
+          <% end %>
         <% end %>
 
         <% current_user.rides_as_driver.each do |ride| %>
           <% if !ride.riders.empty? %>
             <% ride.riders.each do |rider| %>
-              <% if rider.riderships.where(ride_id: ride.id).first.status == 'booked' %>
+              <% ridership = rider.riderships.where(ride_id: ride.id).first %>
+              <% if ridership.status == 'booked' %>
 
                 <div class='alert alert-success'>
                   <a class='close' data-dismiss='alert'>&#215;</a>
                   <div class='row'>
                     <div class='span1'>
-                      <%= image_tag ride.driver.image %>
+                      <%= image_tag rider.profile_photo('small'), class: 'img-polaroid' %>
                     </div>
-                    <div class='span6'>
+                    <div class='span5'>
                       <p>
-                        <%= rider.name %> booked your <%= ride.ride_type %> ride to
-                        Cherry Crest! You'll get paid $<%= ride.gas_money %> per trip if
-                        you accept the request.
+                        <%= rider.first_name %> <%= rider.last_name[0] %> booked your ride to Cherry Crest! You'll get paid $<%= ride.gas_money %> per trip if you accept the request.
                       </p>
                       <%= link_to 'Respond', responding_to_ride_path(ride.id, { rider_id: rider.id }), class: 'btn btn-primary' %>
                       <p>
-                      <div class='countdown' data-expiration='<%= ride.expiration.to_i %>' >
+                      <div class='countdown' data-expiration='<%= ridership.expiration.to_i %>' >
                       </div>
                         Time left to respond
                       </p>
@@ -51,11 +63,11 @@
               <a class='close' data-dismiss='alert'>&#215;</a>
               <div class='row'>
                 <div class='span1'>
-                  <%= image_tag ride.driver.image %>
+                  <%= image_tag ride.driver.profile_photo('normal'), class: 'img-polaroid' %>
                 </div>
-                <div class='span6'>
+                <div class='span5'>
                   <p>
-                  <%= ride.driver.name %> has accepted your request!
+                  <%= ride.driver.first_name %> <%= ride.driver.last_name[0] %> has accepted your request!
                   </p>
                   <%= link_to 'Confirm', confirm_ride_path(ride.id), class: 'btn btn-primary' %>
                 </div>
@@ -65,25 +77,18 @@
           <% end %>
         <% end %>
 
-        <%= render 'get_started_alert' %>
+        <%= render partial: 'get_started_alert' %>
+
       </div>
 
-      <% if false %>
-        <div class='span2'>
-          <a href='#' class='thumbnail'>
-            <%= image_tag(current_user.image, alt: current_user.name) %>
-          </a>
-          <%= link_to 'My Profile', edit_user_registration_path %>
-        </div>
-      <% end %>
     </div>
 
     <div class='row'>
-      <div class='span8'>
+      <div class='span9'>
         <h3>My Rides</h3>
         <% if current_user.rides_as_driver.empty? && current_user.rides_as_rider.empty? %>
-          <p class='lead text-info'>
-          Nothing in here yet! Follow the Get Started wizard to create or find one! 
+          <p class='lead text-info well'>
+          Any time you add a ride of your own or are added to another user's ride it will be replaced here for easy reference.
           </p>
         <% else %>
           <% current_user.rides_as_driver.each do |r| %>

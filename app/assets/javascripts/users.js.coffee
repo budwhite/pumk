@@ -2,10 +2,9 @@ $ ->
   # countdown stuff
   $countdown = $('div.countdown')
   if $countdown.length > 0
-    exp = parseInt $countdown.data('expiration'), 10
+    exp = new Date(parseInt($countdown.data('expiration'), 10) * 1000)
     $countdown.countdown {
       until: exp,
       compact: true,
-      layout: "<h3 class='text-error'>{hnn}{sep}{mnn}{sep}{snn}</h3>",
-      timezone: -1
+      layout: "<h3 class='text-error'>{hnn}{sep}{mnn}{sep}{snn}</h3>"
     }

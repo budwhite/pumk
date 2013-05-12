@@ -26,6 +26,9 @@ class RidesController < ApplicationController
       ride.driver_id = current_user.id
       ride.seats_total = params[:ride][:seats_total]
       ride.seats_filled = 0
+    else
+      for_which_child_id = Child.first(
+        conditions: ["lower(name) = ?", params[:ride][:for_which_child].downcase]).id
     end
 
     ride.gas_money = params[:ride][:gas_money]
@@ -58,7 +61,12 @@ class RidesController < ApplicationController
 
     if ride.save
       if params[:ride][:creator_type].include? 'looking'
-        ride.riderships.create!(user_id: current_user.id, ride_id: ride.id)
+        ride.riderships.create!(
+          user_id: current_user.id,
+          ride_id: ride.id,
+          status: 'created',
+          child_id: for_which_child_id
+        )
       end
       flash[:success] = "Ride posted!"
       redirect_to user_path(current_user)
@@ -87,18 +95,20 @@ class RidesController < ApplicationController
 
   def booking
     @ride = Ride.find(params[:id])
+    @child = current_user.children.first(conditions: ["lower(name) = ?", params[:child_name].downcase])
   end
 
   def booked
     # need to update the phone number to current user
     booked_ride = Ride.find(params[:user][:booked_ride_id])
-
     # if I'm not already a rider and there are seats available
-    if !booked_ride.riders.include? current_user && 
-      booked_ride.seats_total - booked_ride.seats_filled > 0
-      booked_ride.update_attributes(expiration: 1.day.from_now)
+    if !(booked_ride.riders.include? current_user) && booked_ride.seats_total - booked_ride.seats_filled > 0
       booked_ride.riders << current_user
-      current_user.riderships.where(ride_id: booked_ride.id).first.update_attributes(status: 'booked')
+      current_user.riderships.where(ride_id: booked_ride.id).first.update_attributes(
+        status: 'booked',
+        child_id: params[:user][:child_id],
+        expiration: 1.day.from_now
+      )
       booked_ride.save
       RideStatusMailer.ride_booked(current_user, booked_ride).deliver
     else
@@ -114,14 +124,16 @@ class RidesController < ApplicationController
   def responded
     responded_to_ride = Ride.find(params[:ride][:responded_to_ride_id])
     responded_to_rider = User.find(params[:ride][:responded_to_rider_id])
+    @ridership = responded_to_rider.riderships.where(ride_id: responded_to_ride.id).first
 
     if params[:commit].downcase.include? 'accept'
       current_user.update_attributes(phone_number: params[:ride][:phone_number])
-      responded_to_ride.update_attributes(comment: params[:ride][:comment])
-      responded_to_ride.update_attributes(seats_filled: responded_to_ride.seats_filled + 1) unless (responded_to_ride.seats_total - responded_to_ride.seats_filled > 0)
-      responded_to_ride.update_attributes(expiration: nil)
-      @ridership = responded_to_rider.riderships.where(ride_id: responded_to_ride.id).first
-      @ridership.update_attributes(status: 'accepted')
+      @ridership.update_attributes(
+        status: 'accepted',
+        comment: params[:ride][:comment],
+        expiration: nil
+      )
+      responded_to_ride.update_attributes(seats_filled: responded_to_ride.seats_filled + 1) unless (responded_to_ride.seats_total == responded_to_ride.seats_filled)
       RideStatusMailer.ride_accepted(responded_to_rider, responded_to_ride).deliver
 
       if current_user.paypal_email == nil
