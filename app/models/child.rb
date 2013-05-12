@@ -1,5 +1,6 @@
 class Child < ActiveRecord::Base
-  attr_accessible :first_name, :grade, :last_name, :name, :teacher, :gender
+  attr_accessible :first_name, :grade, :last_name, :name, :teacher, :gender, :avatar
+  mount_uploader :avatar, AvatarUploader
 
   before_save do
     if self.gender == 'boy'

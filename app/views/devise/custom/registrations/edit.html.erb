@@ -1,18 +1,24 @@
 <div class='row'>
-  <% if current_user.addresses.count==0 && current_user.children.count==0 %>
-  <%#if true %>
+  <div class='span3'>
+    <%= image_tag current_user.profile_photo('large'), class: 'img-polaroid' %>
+  </div>
+  <div class='span5'>
+    <h2 class='page-header'><%= current_user.name %></h2>
+    <h3><i class='icon-ok icon-large'></i>Facebook connected</h3>
+    <h3><i class='icon-ok icon-large'></i>Verified parent</h3>
+  </div>
+</div>
 
-    <div class='span2'>
-      <br></br>
-      <div class='thumbnail'>
-        <%= image_tag(current_user.profile_photo('large')) %>
-        <h3><%= current_user.first_name %> <%= current_user.last_name[0] %></h3>
-      </div>
-    </div>
+<%# if current_user.addresses.count==0 && current_user.children.count==0 %>
+  <%if true %>
+  <div class='row'>
 
     <div class='span6'>
       <h2>Completing Registration</h2>
-      <%= simple_form_for current_user, :html => { :class => 'form-horizontal' } do |f| %>
+      <%= simple_form_for current_user, :html => { 
+        class: 'form-horizontal',
+        multipart: true
+      } do |f| %>
         <%= field_set_tag 'Where do you live?' do %>
           <%= f.simple_fields_for :addresses do |addresses_form| %>
             <%= addresses_form.input :street1 %>
@@ -64,39 +70,54 @@
         </p>
       </div>
     </div>
+  </div>
 
-  <% else %>
-    <div class='page-header'>
-      <h1>Editing Your Profile</h1>
+<% else %>
+
+
+  <div class='row'>
+    <div class='span8'>
+      <h2 class='page-header'>
+        <%= pluralize(current_user.children.count, 'Child').split[1] %>
+      </h2>
     </div>
-    <h3>Your <%= pluralize(current_user.addresses.count, 'address').split[1] %></h3>
-    <table class='table table-striped'>
-      <thead>
-        <tr>
-          <th><%= Address.human_attribute_name(:name) %></th>
-          <th><%= Address.human_attribute_name(:street1) %></th>
-          <th><%= Address.human_attribute_name(:city) %></th>
-          <th><%= Address.human_attribute_name(:zipcode) %></th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% current_user.addresses.each do | address| %>
-          <tr>
-            <td><%= address.name %></td>
-            <td><%= address.street1 %></td>
-            <td><%= address.city %></td>
-            <td><%= address.zipcode %></td>
-            <td>
-              <%= link_to 'Edit', '#', class: 'btn' %>
-              <%= link_to 'Delete', '#', class: 'btn btn-danger' %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-    <%= link_to 'Add another address', '#', class: 'btn btn-primary' %>
+  </div>
 
-    <h3>Your <%= pluralize(current_user.children.count, 'kid').split[1] %></h3>
-  <% end %>
-</div>
+  <div class='row'>
+    <% current_user.children.each do |c| %>
+      <div class='span2'>
+        <%= image_tag '/assets/default_female.jpg', class: 'img-polaroid' %>
+      </div>
+      <div class='span6'>
+        <strong><%= c.name.titleize %></strong>
+        <% if !c.grade.nil? %>
+          <p>Grade <%= c.grade %></p>
+        <% end %>
+        <% if !c.teacher.nil? %>
+          <p>Teacher <%= c.teacher %></p>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class='row'>
+    <div class='span8'>
+      <h2 class='page-header'>
+        <%= pluralize(current_user.addresses.count, 'Address').split[1] %>
+      </h2>
+    </div>
+  </div>
+
+  <div class='row'>
+    <% current_user.addresses.each do |a| %>
+      <div class='span8'>
+        <address>
+          <strong><%= a.name %></strong><br>
+          <%= a.street1 %><br>
+          <%= a.city %>, <%= a.state %> <%= a.zipcode %><br>
+        </address>
+      </div>
+    <% end %>
+  </div>
+
+<% end %>
