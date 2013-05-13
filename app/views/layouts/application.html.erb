@@ -42,13 +42,11 @@
             </ul>
             </li>
           <% else %>
+            <li class='active'><%= link_to 'About PickUpMyKid', home_about_path %></li>
             <li><%# link_to "Sign in with Facebook", '#', id: 'sign_in' %></li>
             <li><%# link_to "Sign up", new_user_registration_path %></li>
             <li><%# link_to "Login", new_user_session_path %></li>
           <% end %>
-
-          <li class='active'><%= link_to 'About PickUpMyKid', home_about_path %></li>
-          <%#<li><a href='#'>Contact</a></li>%>
         </ul>
         <h3>
           <%= link_to root_path, class: 'brand' do %>
@@ -62,7 +60,8 @@
       <hr>
       <div class='footer'>
         &copy; 2013 Made for Cherry Crest |
-        <%= link_to 'Contact', 'mailto:r@pickupmykid.com' %>
+        <%= link_to 'Contact', 'mailto:r@pickupmykid.com' %> |
+        <%= link_to 'About', home_about_path %>
       </div>
     </div>
 
