@@ -32,7 +32,7 @@
         <%= field_set_tag 'Tell us about your kids!' do %>
           <%= f.simple_fields_for :children do |children_form| %>
             <%= children_form.input :name %>
-            <%= children_form.input :gender, collection: ['boy', 'girl'], default: 'boy' %>
+            <%= children_form.input :gender, collection: ['boy', 'girl'] %>
             <%= children_form.input :grade, collection: Child::GRADE_TYPES, input_html: { class: 'input-mini' } %>
             <%= children_form.input :teacher %>
           <% end %>
@@ -86,7 +86,11 @@
   <div class='row'>
     <% current_user.children.each do |c| %>
       <div class='span2'>
-        <%= image_tag '/assets/default_female.jpg', class: 'img-polaroid' %>
+        <% if c.gender == 'female' %>
+          <%= image_tag '/assets/default_female.jpg', class: 'img-polaroid' %>
+        <% else %>
+          <%= image_tag '/assets/default_male.jpg', class: 'img-polaroid' %>
+        <% end %>
       </div>
       <div class='span6'>
         <strong><%= c.name.titleize %></strong>

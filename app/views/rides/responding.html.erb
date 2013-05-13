@@ -31,7 +31,11 @@
             <%= image_tag rr.profile_photo('small'), class: 'img-polaroid' %>
           </div>
           <div class='span1'>
-            <%= image_tag '/assets/default_male.jpg', class: 'img-polaroid' %>
+            <% if c.gender == 'female' %>
+              <%= image_tag '/assets/default_female.jpg', class: 'img-polaroid' %>
+            <% else %>
+              <%= image_tag '/assets/default_male.jpg', class: 'img-polaroid' %>
+            <% end %>
           </div>
           <div class='span6'>
             <p><strong><%= rr.first_name %>'s <%= son_or_daughter(c) %> <%= c.name.split[0].capitalize %> will be your passenger</strong></p> 
