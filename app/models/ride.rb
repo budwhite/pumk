@@ -22,7 +22,7 @@ class Ride < ActiveRecord::Base
   # @ride.destination_address
   belongs_to :destination_address, class_name: 'Address'
 
-  RIDE_TYPES = %w(Drop-off Pick-up)
+  RIDE_TYPES = ['Morning Drop-off', 'Afternoon Pick-up']
   validates_inclusion_of :ride_type, in: RIDE_TYPES,
     message: "{{value}} must be in #{RIDE_TYPES.join ', '}"
 

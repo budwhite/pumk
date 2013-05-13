@@ -9,7 +9,7 @@ $ ->
   t = (today.getMonth()+1) + '\/' + today.getDate() + '\/' + today.getFullYear()
   $('input.rideDateFrom').val(t).datepicker todayBtn: true
 
-  $('input.rideDateTo').val('6/19/2013').datepicker
+  $('input.rideDateTo').val('6/19/2013').datepicker()
 
   # weekday exclusion
   $("select[id*='excluding_day']").on 'change', ->
