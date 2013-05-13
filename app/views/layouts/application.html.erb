@@ -47,7 +47,7 @@
             <li><%# link_to "Login", new_user_session_path %></li>
           <% end %>
 
-          <li class='active'><%= link_to 'About', home_about_path %></li>
+          <li class='active'><%= link_to 'About PickUpMyKid', home_about_path %></li>
           <%#<li><a href='#'>Contact</a></li>%>
         </ul>
         <h3>
@@ -61,7 +61,8 @@
       <%= yield %>
       <hr>
       <div class='footer'>
-        <p>&copy; 2013 Made for Cherry Crest
+        &copy; 2013 Made for Cherry Crest |
+        <%= link_to 'Contact', 'mailto:r@pickupmykid.com' %>
       </div>
     </div>
 
