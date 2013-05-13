@@ -47,7 +47,7 @@
             <li><%# link_to "Login", new_user_session_path %></li>
           <% end %>
 
-          <%#<li><a href='#'>About</a></li>%>
+          <li class='active'><%= link_to 'About', home_about_path %></li>
           <%#<li><a href='#'>Contact</a></li>%>
         </ul>
         <h3>
@@ -61,7 +61,7 @@
       <%= yield %>
       <hr>
       <div class='footer'>
-        <p>&copy; 2013 Made with <span class='text-error'><strong>&lt3</strong></span></p>
+        <p>&copy; 2013 Made for Cherry Crest
       </div>
     </div>
 
