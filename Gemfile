@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 
-gem 'pg', '~> 0.15.1'
+group :production do
+  gem 'newrelic_rpm'
+end
 
 group :development, :test do
   gem 'debugger'
@@ -23,6 +25,7 @@ group :assets do
 end
 
 gem 'rails', '~> 3.2.13'
+gem 'pg', '~> 0.15.1'
 gem 'thin'
 gem 'jquery-rails'
 gem 'therubyracer'
