@@ -51,6 +51,8 @@
     url: url_for(controller: 'users', action: 'setup_paypal') do |f| %>
     <%= f.input :paypal_email, label: '', placeholder: 'Paypal email address' %>
     <%= f.input 'ridership_id', as: :hidden, input_html: { value: @ridership.id } %>
-    <%= f.submit 'Save', class: 'btn btn-primary' %>
+    <div class='form-actions'>
+      <%= f.button :submit, 'Save', class: 'btn-primary' %>
+    </div>
   <% end %>
 </div>

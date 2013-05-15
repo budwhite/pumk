@@ -90,7 +90,7 @@
           <strong>For which child:</strong>
           <select class='which-child span3'>
             <% current_user.children.each do |c| %>
-              <option><%= c.name.split[0].capitalize %></option>
+              <option><%= c.name %></option>
             <% end %>
           </select>
           <h4>$<%= r.gas_money %> per ride</h4>

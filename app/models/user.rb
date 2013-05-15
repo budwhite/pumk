@@ -7,8 +7,7 @@ class User < ActiveRecord::Base
          :omniauthable, :omniauth_providers => [:facebook]
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :provider, :uid, :name, :email, :password, :password_confirmation, :remember_me, :addresses_attributes, :children_attributes, :phone_number, :paypal_email, :gender
-  # attr_accessible :title, :body
+  attr_accessible :provider, :uid, :name, :email, :password, :password_confirmation, :remember_me, :addresses_attributes, :children_attributes, :phone_number, :paypal_email, :gender, :first_name, :last_name, :verified, :avatar
 
   has_many :addresses, dependent: :destroy
   accepts_nested_attributes_for :addresses, allow_destroy: true
@@ -21,6 +20,8 @@ class User < ActiveRecord::Base
   has_many :riderships, dependent: :restrict
   # @user.rides_as_rider
   has_many :rides_as_rider, :source => :ride, :through => :riderships
+
+  mount_uploader :avatar, AvatarUploader
 
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_create do |user|
@@ -47,6 +48,7 @@ class User < ActiveRecord::Base
   end
 
   def profile_photo(type = 'normal')
-    self.image.split('=')[0] << "=#{type}"
+    '/assets/cc_logo_' + type + '.png'
+    #self.image.split('=')[0] << "=#{type}"
   end
 end

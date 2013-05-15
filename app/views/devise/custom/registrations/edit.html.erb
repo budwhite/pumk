@@ -1,32 +1,141 @@
+<% cu = current_user %>
+
+<% if !cu.verified? %>
+  
+  <div class='alert alert-info'>
+    <a class='close' data-dismiss='alert'>&#215;</a>
+    <h2>Welcome to PickUpMyKid for Cherry Crest!</h2>
+    <p>Your request to register has been forwarded to the school administrators for approval. This is our way of securing the site and ensuring that the network you match with is exclusive to your school.</p>
+    <p>Once the school has approved your registration within 24 hours, you will have full access to carpool matching features.</p>
+    <p>Meanwhile, please complete your user profile below.</p>
+  </div>
+  
+<% end %>
+
+<%= simple_form_for cu, :html => { class: 'form-horizontal', multipart: true } do |f| %>
+  <ul class='nav nav-tabs'>
+    <li class='active'><a href='#addr' data-toggle='tab'>My Addresses</a></li>
+    <li><a href='#contact' data-toggle='tab'>Contact Info</a></li>
+    <li><a href='#personal' data-toggle='tab'>Personal Info</a></li>
+  </ul>
+
+  <div class='tab-content'>
+    <div class='tab-pane active' id='addr'>
+      <% if cu.addresses.count > 0 %>
+        <legend>Your current <%= pluralize(cu.addresses.count, 'address').split[1] %></legend>
+        <div style='width:40%'>
+          <table class='table table-striped table-bordered'>
+            <% cu.addresses.each do |a| %>
+              <% if a.persisted? %>
+                <tr>
+                  <td><strong><%= a.name %></strong></td>
+                  <td>
+                    <address>
+                      <%= a.street1 %><br>
+                      <%= a.city %>, <%= a.state %> <%= a.zipcode %><br>
+                    </address>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+          </table>
+        </div>
+      <% else %>
+        <%= f.simple_fields_for :addresses do |addr_f| %>
+          <%= field_set_tag 'Add a new address' do %>
+            <%= addr_f.input :name, placeholder: 'Home, Work, Soccer, etc.' %>
+            <%= addr_f.input :street1, label: 'Street' %>
+            <%= addr_f.input :city %>
+            <%= addr_f.input :state %>
+            <%= addr_f.input :zipcode %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+    <div class='tab-pane' id='contact'>
+      <%= f.input :email, required: true %>
+      <%= f.input :phone_number, required: true, input_html: { maxlength: 14 } %>
+    </div>
+    <div class='tab-pane' id='personal'>
+      <%= f.input :first_name, required: true %>
+      <%= f.input :last_name, required: true %>
+      <%# f.file_field :avatar %>
+
+      <% if cu.children.count > 0 %>
+        <legend>Your <%= pluralize(cu.children.count, 'child').split[1] %></legend>
+        <div style='width:40%'>
+          <table class='table table-striped table-bordered'>
+            <thead>
+              <th><%= Child.human_attribute_name(:name) %></th>
+              <th><%= Child.human_attribute_name(:gender) %></th>
+              <th><%= Child.human_attribute_name(:grade) %></th>
+              <th><%= Child.human_attribute_name(:teacher) %></th>
+            </thead>
+            <% cu.children.each do |c| %>
+              <% if c.persisted? %>
+                <tbody>
+                  <tr>
+                    <td><%= c.name.titleize %></td>
+                    <td><%= c.gender %></td>
+                    <td><%= c.grade %></td>
+                    <td><%= c.teacher %></td>
+                  </tr>
+                </tbody>
+              <% end %>
+            <% end %>
+          </table>
+        </div>
+      <% else %>
+        <%= f.simple_fields_for :children do |child_f| %>
+          <%= field_set_tag 'Add a child' do %>
+            <%= child_f.input :name %>
+            <%= child_f.input :gender, collection: ['boy', 'girl'], input_html: { class: 'input-mini' } %>
+            <%= child_f.input :grade, collection: Child::GRADE_TYPES, input_html: { class: 'input-mini' } %>
+            <%= child_f.input :teacher %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <hr></hr>
+  <div class='text-center'>
+    <%= f.button :submit, 'Save', class: 'btn-primary' %>
+    <%= submit_tag 'Cancel', type: :reset, class: 'btn btn-danger' %>
+  </div>
+<% end %>
+
+
+<% if false %>
 <div class='row'>
   <div class='span3'>
-    <%= image_tag current_user.profile_photo('large'), class: 'img-polaroid' %>
+    <% if !cu.image.nil? %>
+      <%= image_tag cu.profile_photo('large'), class: 'img-polaroid' %>
+    <% end %>
   </div>
   <div class='span5'>
-    <h2 class='page-header'><%= current_user.name %></h2>
+    <h2 class='page-header'><%= cu.name %></h2>
     <h3><i class='icon-ok icon-large'></i>Facebook connected</h3>
     <h3><i class='icon-ok icon-large'></i>Verified parent</h3>
   </div>
 </div>
 
-<%# if current_user.addresses.count==0 && current_user.children.count==0 %>
-  <%if true %>
+<% if false %>
   <div class='row'>
-
     <div class='span6'>
       <h2>Completing Registration</h2>
-      <%= simple_form_for current_user, :html => { 
+      <%= simple_form_for cu, :html => { 
         class: 'form-horizontal',
         multipart: true
       } do |f| %>
         <%= field_set_tag 'Where do you live?' do %>
-          <%= f.simple_fields_for :addresses do |addresses_form| %>
-            <%= addresses_form.input :street1 %>
-            <%= addresses_form.input :street2 %>
-            <%= addresses_form.input :city %>
-            <%= addresses_form.input :state %>
-            <%= addresses_form.input :zipcode %>
-            <%= addresses_form.input :name, as: :hidden, input_html: { value: 'Home' } %>
+          <%= f.simple_fields_for :addresses do |addr_f| %>
+            <%= addr_f.input :street1 %>
+            <%= addr_f.input :street2 %>
+            <%= addr_f.input :city %>
+            <%= addr_f.input :state %>
+            <%= addr_f.input :zipcode %>
+            <%= addr_f.input :name, as: :hidden, input_html: { value: 'Home' } %>
           <% end %>
         <% end %>
         <%= field_set_tag 'Tell us about your kids!' do %>
@@ -72,19 +181,17 @@
     </div>
   </div>
 
-<% else %>
-
 
   <div class='row'>
     <div class='span8'>
       <h2 class='page-header'>
-        <%= pluralize(current_user.children.count, 'Child').split[1] %>
+        <%= pluralize(cu.children.count, 'Child').split[1] %>
       </h2>
     </div>
   </div>
 
   <div class='row'>
-    <% current_user.children.each do |c| %>
+    <% cu.children.each do |c| %>
       <div class='span2'>
         <% if c.gender == 'female' %>
           <%= image_tag '/assets/default_female.jpg', class: 'img-polaroid' %>
@@ -107,13 +214,13 @@
   <div class='row'>
     <div class='span8'>
       <h2 class='page-header'>
-        <%= pluralize(current_user.addresses.count, 'Address').split[1] %>
+        <%= pluralize(cu.addresses.count, 'Address').split[1] %>
       </h2>
     </div>
   </div>
 
   <div class='row'>
-    <% current_user.addresses.each do |a| %>
+    <% cu.addresses.each do |a| %>
       <div class='span8'>
         <address>
           <strong><%= a.name %></strong><br>
@@ -123,5 +230,5 @@
       </div>
     <% end %>
   </div>
-
+<% end %>
 <% end %>

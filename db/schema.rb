@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130512075436) do
+ActiveRecord::Schema.define(:version => 20130515053702) do
 
   create_table "addresses", :force => true do |t|
     t.string   "street1"
@@ -86,10 +86,11 @@ ActiveRecord::Schema.define(:version => 20130512075436) do
     t.string   "name"
     t.string   "first_name"
     t.string   "last_name"
-    t.string   "image"
     t.string   "phone_number"
     t.string   "paypal_email"
     t.string   "gender"
+    t.boolean  "verified"
+    t.string   "avatar"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

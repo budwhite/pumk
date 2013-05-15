@@ -15,10 +15,6 @@ class Address < ActiveRecord::Base
   validates :zipcode, format: { :with => VALID_ZIP_REGEX, :message => 'should be in the form 12345 or 12345-1234' }
 
   def full_street_address
-    if street2.empty?
-      [street1, city, state, zipcode].compact.join(', ')
-    else
-      [street1, street2, city, state, zipcode].compact.join(', ')
-    end
+    [street1, city, state, zipcode].compact.join(', ')
   end
 end

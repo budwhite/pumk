@@ -8,3 +8,10 @@ $ ->
       compact: true,
       layout: "<h3 class='text-error'>{hnn}{sep}{mnn}{sep}{snn}</h3>"
     }
+
+  # x-editable stuff
+  #$.fn.editable.defaults.mode = 'inline'
+  #$('table.nested-addr a').editable
+    #url: '/users/' + $(@).data('cuid'),
+    #ajaxOptions: { type: 'put', dataType: 'json' },
+    #validate: (v) -> if !v
