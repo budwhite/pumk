@@ -112,7 +112,7 @@ class RidesController < ApplicationController
     if !(@booked_ride.riders.include? current_user) && @booked_ride.seats_total - @booked_ride.seats_filled > 0
       current_user.update_attributes phone_number: params[:user][:phone_number]
       @booked_ride.riders << current_user
-      current_user.riderships.where(ride_id: booked_ride.id).first.update_attributes(
+      current_user.riderships.where(ride_id: @booked_ride.id).first.update_attributes(
         status: 'booked',
         child_id: params[:user][:child_id],
         expiration: 1.day.from_now
