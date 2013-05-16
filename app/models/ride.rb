@@ -5,7 +5,7 @@ class Ride < ActiveRecord::Base
 
   attr_accessor :creator_type, #creator of ride, is she driver or rider?
     :origin, :destination, :time, :time1, :excluding_day, :from_date, :to_date,
-    :for_which_child
+    :for_which_child, :recurring_rules
 
   attr_accessible :destination_address_id, :driver_id, :gas_money, :origin_address_id, :schedule, :seats_filled, :seats_total, :ride_type, :comment
 

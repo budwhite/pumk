@@ -85,10 +85,71 @@
 
     <div class='row'>
       <div class='span9'>
+        <h3>My Upcoming Rides</h3>
+        <% if !current_user.rides_as_driver.empty? %>
+          <% current_user.rides_as_driver.each do |r| %>
+            <% r.riderships.each do |ridership| %>
+              <% if ridership.status == 'accepted' || ridership.status == 'confirmed' %>
+                <% rider = User.find(ridership.user_id) %>
+                <% child = Child.find(ridership.child_id) %>
+                <hr></hr>
+                <h4>
+                  <span class='text-info'>
+                    <%= current_user.first_name %> <%= current_user.last_name %>
+                  </span>
+                  is driving
+                  <span class='text-info'>
+                    <%= rider.first_name %> <%= rider.last_name %>
+                  </span>'s <%= son_or_daughter(child) %>
+                  <%= child.name %>
+                </h4>
+                <strong>
+                  From <%= r.schedule.start_time.to_date %> <%= r.schedule %>
+                </strong>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <% if !current_user.rides_as_rider.empty? %>
+          <% current_user.rides_as_rider.each do |r| %>
+            <% r.riderships.each do |ridership| %>
+              <% if ridership.status == 'accepted' || ridership.status == 'confirmed' %>
+                <% driver = r.driver %>
+                <% child = Child.find(ridership.child_id) %>
+                <hr></hr>
+                <h4>
+                  <span class='text-info'>
+                    <%= driver.first_name %> <%= driver.last_name %>
+                  </span>
+                  is driving
+                  <span class='text-info'>
+                    <%= current_user.first_name %> <%= current_user.last_name %>
+                  </span>'s <%= son_or_daughter(child) %>
+                  <%= child.name %>
+                </h4>
+                <strong>
+                  From <%= r.schedule.start_time.to_date %> <%= r.schedule %>
+                </strong>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <% if current_user.rides_as_driver.empty? && current_user.rides_as_rider.empty? %>
+          <p class='lead text-info well'>
+          You don't have any upcoming rides.
+          </p>
+        <% end %>
+      </div>
+    </div>
+
+    <div class='row'>
+      <div class='span9'>
         <h3>My Rides</h3>
         <% if current_user.rides_as_driver.empty? && current_user.rides_as_rider.empty? %>
           <p class='lead text-info well'>
-          Any time you add a ride of your own or are added to another user's ride it will be replaced here for easy reference.
+          Any time you add a ride of your own or are added to another user's ride it will be placed here for easy reference.
           </p>
         <% else %>
           <% current_user.rides_as_driver.each do |r| %>

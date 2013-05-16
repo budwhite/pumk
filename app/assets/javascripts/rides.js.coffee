@@ -1,9 +1,9 @@
 $ ->
   $('div.ride_for_which_child').css 'display', 'none'
-  $('div.ride_time1').css 'display', 'none'
+  #$('div.ride_time1').css 'display', 'none'
 
-  $('input.rideTime').parent('div').addClass 'bootstrap-timepicker'
-  $('input.rideTime').timepicker minuteStep: 5
+  #$('input.rideTime').parent('div').addClass 'bootstrap-timepicker'
+  #$('input.rideTime').timepicker minuteStep: 5
 
   today = new Date()
   t = (today.getMonth()+1) + '\/' + today.getDate() + '\/' + today.getFullYear()
@@ -12,30 +12,30 @@ $ ->
   $('input.rideDateTo').val('6/19/2013').datepicker()
 
   # weekday exclusion
-  $("select[id*='excluding_day']").on 'change', ->
-    switch @value
-      when 'None'
-        $('div.ride_time1').css 'display', 'none'
-      else
-        $('div.ride_time1').css 'display', ''
+  #$("select[id*='excluding_day']").on 'change', ->
+    #switch @value
+      #when 'None'
+        #$('div.ride_time1').css 'display', 'none'
+      #else
+        #$('div.ride_time1').css 'display', ''
 
   # ride type radio button selection
-  $("input[type=radio][id*='ride_type']").on 'change', ->
-    if @value is 'Pick-up'
-      $("select[id*='excluding_day']").val 'Wednesday'
-      $("label[for*='ride_time']").text('Leaving at')
-        .eq(1)
-        .parent('div')
-        .css 'display', ''
-      $('input.rideTime').eq(0).val '02:25 PM'
-      $('input.rideTime').eq(1).val '12:05 PM'
-    else
-      $("select[id*='excluding_day']").val 'None'
-      $("label[for*='ride_time']").text('Arriving at')
-        .eq(1)
-        .parent('div')
-        .css 'display', 'none'
-      $('input.rideTime').eq(0).val '07:55 PM'
+  #$("input[type=radio][id*='ride_type']").on 'change', ->
+    #if @value is 'Afternoon Pick-up'
+      #$("select[id*='excluding_day']").val 'Wednesday'
+      #$("label[for*='ride_time']").text('Leaving at')
+        #.eq(1)
+        #.parent('div')
+        #.css 'display', ''
+      #$('input.rideTime').eq(0).val '02:25 PM'
+      #$('input.rideTime').eq(1).val '12:05 PM'
+    #else
+      #$("select[id*='excluding_day']").val 'None'
+      #$("label[for*='ride_time']").text('Arriving at')
+        #.eq(1)
+        #.parent('div')
+        #.css 'display', 'none'
+      #$('input.rideTime').eq(0).val '07:55 PM'
 
   # creator type selection, i.e. driver or rider
   $("input[type=radio][id*='creator_type']").on 'change', ->

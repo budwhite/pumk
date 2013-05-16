@@ -1,5 +1,5 @@
 <h3>Success! Your request has been sent!</h3>
 <p>
-  Remember that you WILL NOT be charged unless John accepts your request. If John doesn't respond within 24 hours, then booking will expire and you can try someone else.
+  If <%= booked_ride.driver.first_name %> doesn't respond within 24 hours, then the booking will expire and you can try someone else.
 </p>
 <%= link_to 'Back to Home', user_path(current_user), class: 'btn btn-primary' %>

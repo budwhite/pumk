@@ -20,7 +20,9 @@
             <span class='label label-inverse'>To</span> 
             <i class='icon-map-marker icon-large' style='color: red;'></i> <%= r.destination_address.name %>
             </p>
-            <strong><%= r.schedule %></strong>
+            <strong>
+              From <%= r.schedule.start_time.to_date %> <%= r.schedule %>
+            </strong>
           </div>
         </div>
 
@@ -39,7 +41,7 @@
           </div>
           <div class='span6'>
             <p><strong><%= rr.first_name %>'s <%= son_or_daughter(c) %> <%= c.name.split[0].capitalize %> will be your passenger</strong></p> 
-            <p>Their house is XXX miles from yours.</p>
+            <p>Their house is ? miles from yours.</p>
           </div>
         </div>
 
@@ -123,7 +125,7 @@
             How it works
           </p>
           <small>
-            Respond before the countdown completes to accept or decline <%= rr.first_name %>'s request. If you accept, you'll get paid $<%= r.gas_money * 5 %> after the trips occur for the week.
+            Respond before the countdown completes to accept or decline <%= rr.first_name %>'s request.
           </small>
         </div>
       </div>

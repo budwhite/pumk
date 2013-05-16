@@ -43,9 +43,7 @@
         <% then leading_text = 'Arriving at' %>
         <% else leading_text = 'Leaving at' %>
       <% end %>
-      <%= leading_text %>
-      <%= r.schedule.start_time.strftime('%H:%M %P') %>
-      <%= r.schedule %>
+      From <%= r.schedule.start_time.to_date %> <%= r.schedule %>
       </p>
       <% if not r.schedule1.recurrence_rules.empty? %>
         And <%= leading_text.downcase %>

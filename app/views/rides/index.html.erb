@@ -63,26 +63,9 @@
         </div>
       </div>
       
-      <p>
-      <% if r.ride_type.downcase.include? 'drop-off' %>
-        <% then leading_text = 'Arriving at' %>
-        <% else leading_text = 'Leaving at' %>
-      <% end %>
       <strong>
-        <%= leading_text %>
-        <%= r.schedule.start_time.strftime('%H:%M %P') %>
-        <%= r.schedule %>
+        From <%= r.schedule.start_time.to_date %> <%= r.schedule %>
       </strong>
-      </p>
-      <p>
-      <% if not r.schedule1.recurrence_rules.empty? %>
-        <strong>
-          And <%= leading_text.downcase %>
-        <%= r.schedule1.start_time.strftime('%H:%M %P') %>
-        <%= r.schedule1 %>
-      </strong>
-      <% end %>
-      </p>
       
     </div>
     <div class='span4'>

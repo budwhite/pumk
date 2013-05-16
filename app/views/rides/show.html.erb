@@ -30,22 +30,7 @@
 <div class='row'>
   <div class='span8 well'>
     <strong>
-      <p>
-      <% if r.ride_type.downcase.include? 'drop-off' %>
-        <% then leading_text = 'Arriving at' %>
-        <% else leading_text = 'Leaving at' %>
-        <% end %>
-        <%= leading_text %>
-        <%= r.schedule.start_time.strftime('%H:%M %P') %>
-        <%= r.schedule %>
-        </p>
-        <p>
-        <% if not r.schedule1.recurrence_rules.empty? %>
-          And <%= leading_text.downcase %>
-        <%= r.schedule1.start_time.strftime('%H:%M %P') %>
-        <%= r.schedule1 %>
-      <% end %>
-      </p>
+      From <%= r.schedule.start_time.to_date %> <%= r.schedule %>
     </strong>
     <% if ride_creator_type == 'driver' %>
       <strong>Riders and Seats</strong>
@@ -65,27 +50,33 @@
       <div class='well span3'>
         <% if r.riders.include? current_user %>
           <% ridership = r.riderships.where(user_id: current_user.id).first %>
-          <% if ridership.expiration > Time.now %>
-            <strong>Booking status:</strong>
-            <span class='label label-info'>
-              <% if ridership.status == 'booked' %>
-                Pending
-              <% else %>
-                Accepted
+          <strong>Booking status:</strong>
+
+          <% case ridership.status %>
+          <% when 'booked' %>
+            <% if ridership.expiration > Time.now %>
+              <span class='label label-info'>Pending</span>
+              <p>You've already initiated a booking for this ride.</p>
+              <p>Time left to respond:</p>
+              <div class='countdown' data-expiration='<%= ridership.expiration.to_i %>' >
+              </div>
+              <%= link_to '#', class: 'btn btn-danger btn-block' do %>
+                <i class='icon-remove icon-large'></i>
+                Cancel Request
               <% end %>
-            </span>
-            <p>You've already initiated a booking for this ride.</p>
-            <p>Time left to respond:</p>
-            <div class='countdown' data-expiration='<%= ridership.expiration.to_i %>' >
-            </div>
-            <%= link_to '#', class: 'btn btn-danger btn-block' do %>
-              <i class='icon-remove icon-large'></i>
-              Cancel Request
+            <% else %>
+              <span class='label label-important'>Expired</span>
             <% end %>
-          <% else %>
-            <strong>Booking status:</strong>
-            <span class='label label-error'>Expired</span>
+          <% when 'accepted' %>
+              <span class='label label-success'>Accepted</span>
+              <p>Your request has been accepted.</p>
+          <% when 'rejected' %>
+              <span class='label label-important'>Rejected</span>
+              <p>Your request has been rejected.</p>
+          <% when 'confirmed' %>
+              <span class='label label-success'>Confirmed</span>
           <% end %>
+
         <% else %>
           <strong>For which child:</strong>
           <select class='which-child span3'>
