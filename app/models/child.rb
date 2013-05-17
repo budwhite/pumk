@@ -15,6 +15,6 @@ class Child < ActiveRecord::Base
   validates :name, :grade, :teacher, presence: true
 
   GRADE_TYPES = %w(K 1 2 3 4 5 6)
-  validates_inclusion_of :grade, in: GRADE_TYPES, message: "{{value}} must be in #{GRADE_TYPES.join ', '}" 
+  #validates_inclusion_of :grade, in: GRADE_TYPES, message: "{{value}} must be in #{GRADE_TYPES.join ', '}" 
 
 end

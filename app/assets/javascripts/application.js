@@ -18,3 +18,4 @@
 //= require bootstrap-datepicker
 //= require jquery.countdown
 //= require recurring_select
+//= require bootstrap-editable

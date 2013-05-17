@@ -1,0 +1,35 @@
+<% cu = current_user %>
+<legend>My personal info and contact</legend>
+<div style='width:40%'>
+  <table class='user table table-striped table-bordered' data-cuid='<%= cu.id %>'>
+    <tr>
+      <td width='40%'><strong>First Name</strong></td>
+      <td>
+        <a href='#' data-name='first_name' data-type='text' data-pk='<%= cu.id %>'>
+          <%= cu.first_name %>
+      </td>
+    </tr>
+    <tr>
+      <td width='40%'><strong>Last Name</strong></td>
+      <td>
+        <a href='#' data-name='last_name' data-type='text' data-pk='<%= cu.id %>'>
+          <%= cu.last_name %>
+      </td>
+    </tr>
+    <tr>
+      <td width='40%'><strong>Email</strong></td>
+      <td>
+        <a href='#' data-name='email' data-type='email' data-pk='<%= cu.id %>'>
+          <%= cu.email %>
+      </td>
+    </tr>
+    <tr>
+      <td width='40%'><strong>Phone</strong></td>
+      <td>
+        <a href='#' data-name='phone_number' data-type='tel' data-pk='<%= cu.id %>'>
+          <%= cu.phone_number %>
+      </td>
+    </tr>
+  </table>
+  <button class='toggle-edit btn pull-right' data-model='user' data-id='<%= cu.id %>'>Edit</button>
+</div>

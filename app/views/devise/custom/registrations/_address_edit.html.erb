@@ -1,0 +1,81 @@
+<% cu = current_user %>
+<% if cu.addresses.count > 0 %>
+  <legend>My current <%= pluralize(cu.addresses.count, 'address').split[1] %></legend>
+  <div style='width:40%'>
+    <% cu.addresses.each do |a| %>
+      <table class='address table table-striped table-bordered' data-cuid='<%= cu.id %>'>
+        <tr>
+          <td width='40%'><strong>Name</strong></td>
+          <td>
+            <a href='#' data-name='name' data-type='text' data-pk='<%= a.id %>'>
+              <%= a.name %>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Street</strong></td>
+          <td>
+            <a href='#' data-name='street1' data-type='text' data-pk='<%= a.id %>'>
+              <%= a.street1 %>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>City</strong></td>
+          <td>
+            <a href='#' data-name='city' data-type='text' data-pk='<%= a.id %>'>
+              <%= a.city %>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>State</strong></td>
+          <td>
+            <a href='#' data-name='state' data-type='text' data-pk='<%= a.id %>'>
+              <%= a.state %>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Zipcode</strong></td>
+          <td>
+            <a href='#' data-name='zipcode' data-type='text' data-pk='<%= a.id %>'>
+              <%= a.zipcode %>
+            </a>
+          </td>
+        </tr>
+      </table>
+      <button class='toggle-edit btn pull-right' data-model='address' data-id='<%= a.id %>'>Edit</button>
+      <br></br>
+    <% end %>
+  </div>
+<% end %>
+
+<legend>Create new address</legend>
+<div style='width: 40%'>
+  <div id='msg-addr' class='alert hide'></div>
+  <table class='address new table table-striped table-bordered' data-cuid='<%= cu.id %>'>
+    <tr>
+      <td width='40%'><strong>Name</strong></td>
+      <td><a href='#' data-name='name' data-type='text'></a></td>
+    </tr>
+    <tr>
+      <td><strong>Street</strong></td>
+      <td><a href='#' data-name='street1' data-type='text'></a>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>City</strong></td>
+      <td><a href='#' data-name='city' data-type='text'></a></td>
+    </tr>
+    <tr>
+      <td><strong>State</strong></td>
+      <td><a href='#' data-name='state' data-type='text'></a></td>
+    </tr>
+    <tr>
+      <td><strong>Zipcode</strong></td>
+      <td><a href='#' data-name='zipcode' data-type='text'></a></td>
+    </tr>
+  </table>
+  <button id="save-addr-btn" class="btn btn-primary">Save new address</button>
+</div>

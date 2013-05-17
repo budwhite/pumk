@@ -11,15 +11,73 @@ class UsersController < ApplicationController
   end
 
   def update
-    respond_to do |format|
-      if current_user.update_attributes(params[:user])
-        format.html { redirect_to user_path(current_user), notice: 'Successfully updated.' }
-        format.json { render json: current_user }
+    if params[:pk].nil?
+      new_record = true
+    else
+      new_record = false
+    end
+
+    case params[:model]
+    when 'address'
+      if new_record
+        address = current_user.addresses.build(
+          name: params[:name],
+          street1: params[:street1],
+          city: params[:city],
+          state: params[:state],
+          zipcode: params[:zipcode]
+        )
+        if address.save
+          render json: address
+        else
+          render json: address.errors, status: :unprocessable_entity
+        end
       else
-        format.html { render 'devise/custom/registrations/edit' }
-        format.json { render json: current_user }
+        address = Address.find(params[:pk])
+        if address.update_attributes(params[:name].to_sym => params[:value])
+          head :ok
+        else
+          render json: address.errors, status: :unprocessable_entity
+        end
+      end
+    when 'child'
+      if new_record
+        child = current_user.children.build(
+          name: params[:name],
+          gender: params[:gender],
+          grade: params[:grade],
+          teacher: params[:teacher]
+        )
+        if child.save
+          render json: child
+        else
+          render json: child.errors, status: :unprocessable_entity
+        end
+      else
+        child = Child.find(params[:pk])
+        if child.update_attributes(params[:name].to_sym => params[:value])
+          head :ok
+        else
+          render json: child.errors, status: :unprocessable_entity
+        end
+      end
+    when 'user'
+      if current_user.update_attributes(params[:name].to_sym => params[:value])
+        head :ok
+      else
+        render json: current_user.errors, status: :unprocessable_entity
       end
     end
+
+    #respond_to do |format|
+      #if current_user.update_attributes(params[:user])
+        #format.html { redirect_to user_path(current_user), notice: 'Successfully updated.' }
+        #format.json { render json: current_user }
+      #else
+        #format.html { render 'devise/custom/registrations/edit' }
+        #format.json { render json: current_user }
+      #end
+    #end
   end
 
   def setup_paypal
