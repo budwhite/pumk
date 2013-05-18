@@ -1,5 +1,11 @@
+<% if @booked_ride.driver == current_user %>
+  <% requestee = @booked_ride.riders.first %>
+<% else %>
+  <% requestee = @booked_ride.driver %>
+<% end %>
+
 <h3>Success! Your request has been sent!</h3>
 <p>
-  If <%= booked_ride.driver.first_name %> doesn't respond within 24 hours, then the booking will expire and you can try someone else.
+  If <%= requestee.first_name %> doesn't respond within 24 hours, then the booking will expire and you can try someone else.
 </p>
 <%= link_to 'Back to Home', user_path(current_user), class: 'btn btn-primary' %>

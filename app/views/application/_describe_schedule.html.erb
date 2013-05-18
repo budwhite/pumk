@@ -1,0 +1,10 @@
+<!--http://www.wetware.co.nz/2009/07/rails-date-formats-strftime/-->
+
+<% if r.ride_type.downcase.include? 'drop-off' %>
+  <% leading_text = 'Arriving at' %>
+<% else %>
+  <% leading_text = 'Leaving at' %>
+<% end %>
+
+<%= leading_text %> <%= r.schedule.start_time.strftime('%l:%M %P') %>
+from <%= r.schedule.start_time.strftime('%m/%d/%y') %> <%= r.schedule %>

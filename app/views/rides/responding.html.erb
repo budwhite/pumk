@@ -1,11 +1,24 @@
 <% r = @ride %>
-<% rr = @rider %>
-<% ridership = rr.riderships.where(ride_id: r.id).first %>
+<% if @rider %>
+  <% rr = @rider %>
+  <% offering = false %>
+  <% ridership = rr.riderships.where(ride_id: r.id).first %>
+<% else %>
+  <% d = @driver %>
+  <% offering = true %>
+  <% ridership = r.riderships.where(user_id: current_user.id).first %>
+<% end %>
 
 <div class='row'>
   <div class='span8'>
-    <% c = rr.children.find(ridership.child_id) %>
-    <h3>Ride request from <%= rr.first_name %> <%= rr.last_name[0] %> for <%= pronoun(rr) %> <%= son_or_daughter(c) %> <%= c.name.split[0].capitalize %></h3>
+    <% if not offering %>
+      <% c = rr.children.find(ridership.child_id) %>
+      <h3>Ride request from <%= rr.first_name %> <%= rr.last_name[0] %> for <%= son_or_daughter(c) %> <%= c.name.split[0].capitalize %></h3>
+
+    <% else %>
+      <% c = Child.find(ridership.child_id) %>
+      <h3>Ride offer from <%= d.first_name %> <%= d.last_name %> for your <%= son_or_daughter(c) %> <%= c.name %></h3>
+    <% end %>
     <div class='row'>
       <div class='span7 well'>
 
@@ -14,14 +27,23 @@
             <p>
             <span class='label label-inverse'>From</span> 
             <i class='icon-map-marker icon-large' style='color: green;'></i> 
-            <%= r.origin_address.full_street_address %>
+            <% if r.origin_address.user_id ==0 %>
+              <%= r.origin_address.name %>
+            <% else %>
+              <%= r.origin_address.full_street_address %>
+            <% end %>
             </p>
             <p>
             <span class='label label-inverse'>To</span> 
-            <i class='icon-map-marker icon-large' style='color: red;'></i> <%= r.destination_address.name %>
+            <i class='icon-map-marker icon-large' style='color: red;'></i>
+            <% if r.destination_address.user_id ==0 %>
+              <%= r.destination_address.name %>
+            <% else %>
+              <%= r.destination_address.full_street_address %>
+            <% end %>
             </p>
             <strong>
-              From <%= r.schedule.start_time.to_date %> <%= r.schedule %>
+              <%= render partial: 'describe_schedule', locals: { r: r }  %>
             </strong>
           </div>
         </div>
@@ -30,7 +52,11 @@
 
         <div class='row'>
           <div class='span1'>
-            <%= image_tag rr.profile_photo('small'), class: 'img-polaroid' %>
+            <% if offering %>
+              <%= image_tag d.profile_photo('small'), class: 'img-polaroid' %>
+            <% else %>
+              <%= image_tag rr.profile_photo('small'), class: 'img-polaroid' %>
+            <% end %>
           </div>
           <div class='span1'>
             <% if c.gender == 'female' %>
@@ -39,33 +65,27 @@
               <%= image_tag '/assets/default_male.jpg', class: 'img-polaroid' %>
             <% end %>
           </div>
-          <div class='span6'>
-            <p><strong><%= rr.first_name %>'s <%= son_or_daughter(c) %> <%= c.name.split[0].capitalize %> will be your passenger</strong></p> 
-            <p>Their house is ? miles from yours.</p>
-          </div>
         </div>
 
-        <div class='row'>
-          <div class='span8'>
-            <div class='map-canvas small' 
-              data-lat= "<%= rr.addresses.where(name: 'Home').first.latitude %>"
-              data-lng= "<%= rr.addresses.where(name: 'Home').first.longitude %>" >
-            </div>
-          </div>
-        </div>
+        <!--<div class='row'>-->
+          <!--<div class='span8'>-->
+            <!--<div class='map-canvas small' data-orig-lat= "<%# rr.addresses.where(name: 'Home').first.latitude %>" data-orig-lng= "<%# rr.addresses.where(name: 'Home').first.longitude %>" >-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
 
         <div class='row'>
           <span class='span6 lead'>
             Each Ride Payout $<%= r.gas_money %>
-          </span>
-        </div>
-        <div class='row'>
-          <span class='span6 lead'>
-            Total Weekly Payout $<%= r.gas_money * 5%>
-          </span>
-        </div>
+        </span>
       </div>
+      <!--<div class='row'>-->
+        <!--<span class='span6 lead'>-->
+          <!--Total Weekly Payout $<%# r.gas_money * 5%>-->
+          <!--</span>-->
+        <!--</div>-->
     </div>
+  </div>
 
     <div class='row'>
       <div class='span8'>
@@ -83,9 +103,14 @@
               label: 'Please provide your best contact number:',
               placeholder: 'phone number' %>
             <%= f.input :comment, input_html: { rows: 5 },
-              placeholder: 'Include an optional message for ' + rr.first_name + '.' %>
+              placeholder: 'Include an optional message for ' + 
+              if offering then d.first_name else rr.first_name end + '.' %>
             <%= f.input 'responded_to_ride_id', as: :hidden, input_html: { value: r.id } %>
-            <%= f.input 'responded_to_rider_id', as: :hidden, input_html: { value: rr.id } %>
+            <% if offering %>
+              <%= f.input 'responded_to_driver_id', as: :hidden, input_html: { value: d.id } %>
+            <% else %>
+              <%= f.input 'responded_to_rider_id', as: :hidden, input_html: { value: rr.id } %>
+            <% end %>
             <%= f.submit 'Accept!', class: 'btn btn-success' %>
           <% end %>
         </div>
@@ -98,9 +123,14 @@
             html: { class: 'form-horizontal' },
             url: url_for(controller: 'rides', action: 'responded'), method: :put do |f| %>
             <%= f.input :comment, as: :text, input_html: { value: '', rows: 5 },
-              placeholder: 'Why are you declining ' + rr.first_name + "'s request?" %>
+              placeholder: 'Why are you declining ' + 
+              if offering then d.first_name else rr.first_name end  + "'s request?" %>
             <%= f.input 'responded_to_ride_id', as: :hidden, input_html: { value: r.id } %>
-            <%= f.input 'responded_to_rider_id', as: :hidden, input_html: { value: rr.id } %>
+            <% if offering %>
+              <%= f.input 'responded_to_driver_id', as: :hidden, input_html: { value: d.id } %>
+            <% else %>
+              <%= f.input 'responded_to_rider_id', as: :hidden, input_html: { value: rr.id } %>
+            <% end %>
             <%= f.submit 'Decline', class: 'btn btn-danger' %>
           <% end %>
         </div>
@@ -125,7 +155,8 @@
             How it works
           </p>
           <small>
-            Respond before the countdown completes to accept or decline <%= rr.first_name %>'s request.
+            Respond before the countdown completes to accept or decline 
+            <%= if offering then d.first_name else rr.first_name end  %>'s request.
           </small>
         </div>
       </div>

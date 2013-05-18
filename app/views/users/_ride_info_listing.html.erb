@@ -1,10 +1,5 @@
-<% if !r.driver_id.nil? %>
-  <% ride_creator = r.driver %>
-  <% ride_creator_type = 'driver' %>
-<% else %>
-  <% ride_creator = r.riders.first %>
-  <% ride_creator_type = 'rider' %>
-<% end %>
+<% ride_creator = User.find(r.created_by) %>
+<% ride_creator_type = r.created_as %>
 
 <hr></hr>
 <div class='container'>
@@ -19,7 +14,7 @@
         <% else %>
           <% child = Child.find(ride_creator.riderships.where(ride_id: r.id).first.child_id) %>
           looking for help for 
-          <%= pronoun(ride_creator) %> <%= son_or_daughter(child) %>
+          <%= son_or_daughter(child) %>
           <%= child.name.capitalize %>
         <% end %>
       </h4>
@@ -31,25 +26,26 @@
       <p>
       <span class='label label-inverse'>From</span> 
       <i class='icon-map-marker icon-large' style='color: green;'></i> 
-      <%= r.origin_address.full_street_address %>
+      <% if r.origin_address.user_id ==0 %>
+        <%= r.origin_address.name %>
+      <% else %>
+        <%= r.origin_address.full_street_address %>
+      <% end %>
       </p>
       <p>
       <span class='label label-inverse'>To</span> 
       <i class='icon-map-marker icon-large' style='color: red;'></i> 
-      <%= r.destination_address.name %>
+      <% if r.destination_address.user_id ==0 %>
+        <%= r.destination_address.name %>
+      <% else %>
+        <%= r.destination_address.full_street_address %>
+      <% end %>
       </p>
       <p>
-      <% if r.ride_type.downcase.include? 'drop-off' %>
-        <% then leading_text = 'Arriving at' %>
-        <% else leading_text = 'Leaving at' %>
-      <% end %>
-      From <%= r.schedule.start_time.to_date %> <%= r.schedule %>
+      <strong>
+        <%= render partial: 'describe_schedule', locals: { r: r }  %>
+      </strong>
       </p>
-      <% if not r.schedule1.recurrence_rules.empty? %>
-        And <%= leading_text.downcase %>
-        <%= r.schedule1.start_time.strftime('%H:%M %P') %>
-        <%= r.schedule1 %>
-      <% end %>
     </div>
     <div class='span2'>
       <% if ride_creator_type == 'driver' %>

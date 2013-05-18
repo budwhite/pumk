@@ -2,8 +2,8 @@ $ ->
   $('div.ride_for_which_child').css 'display', 'none'
   #$('div.ride_time1').css 'display', 'none'
 
-  #$('input.rideTime').parent('div').addClass 'bootstrap-timepicker'
-  #$('input.rideTime').timepicker minuteStep: 5
+  $('input.rideTime').parent('div').addClass 'bootstrap-timepicker'
+  $('input.rideTime').timepicker minuteStep: 5
 
   today = new Date()
   t = (today.getMonth()+1) + '\/' + today.getDate() + '\/' + today.getFullYear()
@@ -20,22 +20,22 @@ $ ->
         #$('div.ride_time1').css 'display', ''
 
   # ride type radio button selection
-  #$("input[type=radio][id*='ride_type']").on 'change', ->
-    #if @value is 'Afternoon Pick-up'
+  $("input[type=radio][id*='ride_type']").on 'change', ->
+    if @value is 'Pick-up'
       #$("select[id*='excluding_day']").val 'Wednesday'
-      #$("label[for*='ride_time']").text('Leaving at')
+      $("label[for*='ride_time']").text('Leaving at')
         #.eq(1)
         #.parent('div')
         #.css 'display', ''
-      #$('input.rideTime').eq(0).val '02:25 PM'
+      $('input.rideTime').eq(0).val '02:25 PM'
       #$('input.rideTime').eq(1).val '12:05 PM'
-    #else
+    else
       #$("select[id*='excluding_day']").val 'None'
-      #$("label[for*='ride_time']").text('Arriving at')
+      $("label[for*='ride_time']").text('Arriving at')
         #.eq(1)
         #.parent('div')
         #.css 'display', 'none'
-      #$('input.rideTime').eq(0).val '07:55 PM'
+      $('input.rideTime').eq(0).val '07:55 PM'
 
   # creator type selection, i.e. driver or rider
   $("input[type=radio][id*='creator_type']").on 'change', ->
@@ -54,8 +54,8 @@ $ ->
   $map = $('.map-canvas')
   if $map.length > 0
     $map.each ->
-      lat = $(@).data('lat')
-      lng = $(@).data('lng')
+      lat = $(@).data('orig-lat')
+      lng = $(@).data('orig-lng')
       options = {
         zoom: 15,
         center: new google.maps.LatLng(lat, lng),
@@ -68,11 +68,27 @@ $ ->
         # icons obtained here: http://stackoverflow.com/a/7179941
         icon: '/assets/darkgreen_MarkerA.png'
       }
+      marker = new google.maps.Marker {
+        position: new google.maps.LatLng($(@).data('dest-lat'), $(@).data('dest-lng')),
+        map: map,
+        icon: '/assets/red_MarkerA.png'
+      }
+      bounds = new google.maps.LatLngBounds()
+      bounds.extend options.center
+      bounds.extend marker.position
+      map.fitBounds bounds
 
   # rides/show view
   $('button.book-it').click ->
-    child_name = $('select.which-child').val()
-    window.location.href = '/rides/booking/' + $(this).data('ride-id') + '?' + $.param({ child_name: child_name })
+    $child = $('select.which-child')
+    url = '/rides/booking/' + $(this).data('ride-id')
+    # if there's child on page, assume it is potentially rider booking a driver's ride
+    # and vice versa
+    if $child.length > 0
+      child_name = $('select.which-child').val()
+      window.location.href =  url + '?' + $.param({ child_name: child_name })
+    else
+      window.location.href = url
 
   # form submit on booking view
   $('button.submit').click -> $('form.user_phone').submit()

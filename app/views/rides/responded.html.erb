@@ -1,11 +1,17 @@
 <% rider = User.find(@ridership.user_id) %>
 <% ride = Ride.find(@ridership.ride_id) %>
+<% driver = ride.driver %>
+<% if @offering %>
+  <% asker = driver %>
+<% else %>
+  <% asker = rider %>
+<% end %>
 
 <div class='row'>
   <div class='span12'>
-    <h2>Hooray! You've accepted <%= rider.first_name %>'s request!</h2>
+    <h2>Hooray! You've accepted <%= asker.first_name %>'s request!</h2>
     <p>
-      Here's <%= rider.first_name %>'s email and phone number so you can get in contact directly:
+      Here's <%= asker.first_name %>'s email and phone number so you can get in contact directly:
     </p>
   </div>
 </div>
@@ -13,12 +19,12 @@
 <div class='row'>
   <div class='span1'>
     <p>
-    <%= image_tag rider.profile_photo('normal'), class: 'img-polaroid' %>
+    <%= image_tag asker.profile_photo('normal'), class: 'img-polaroid' %>
     </p>
   </div>
   <div class='span4'>
-    <strong><%= rider.email %></strong>
-    <strong><%= rider.phone_number %></strong>
+    <p><strong><%= asker.email %></strong></p>
+    <p><strong><%= asker.phone_number %></strong></p>
   </div>
 </div>
 

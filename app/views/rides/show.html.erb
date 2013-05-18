@@ -1,12 +1,7 @@
 <% r = @ride %>
 
-<% if !r.driver_id.nil? %>
-  <% ride_creator = r.driver %>
-  <% ride_creator_type = 'driver' %>
-<% else %>
-  <% ride_creator = r.riders.first %>
-  <% ride_creator_type = 'rider' %>
-<% end %>
+<% ride_creator = User.find(r.created_by) %>
+<% ride_creator_type = r.created_as %>
 
 <div class='row'>
   <div class='span3'>
@@ -20,9 +15,9 @@
 <div class='row'>
   <div class='span12'>
     <h3>
-      <%= r.origin_address.street1 %> <%= r.origin_address.city %>
+      <%= r.origin_address.street1 %>, <%= r.origin_address.city %>
       <i class='icon-arrow-right icon-large'></i>
-      <%= r.destination_address.name %>
+      <%= r.destination_address.street1 %>, <%= r.destination_address.city %>
     </h3>
   </div>
 </div>
@@ -30,7 +25,7 @@
 <div class='row'>
   <div class='span8 well'>
     <strong>
-      From <%= r.schedule.start_time.to_date %> <%= r.schedule %>
+      <%= render partial: 'describe_schedule', locals: { r: r }  %>
     </strong>
     <% if ride_creator_type == 'driver' %>
       <strong>Riders and Seats</strong>
@@ -40,8 +35,10 @@
       </p>
     <% end %>
     <div class='map-canvas big' 
-      data-lat= '<%= r.origin_address.latitude %>'
-      data-lng= '<%= r.origin_address.longitude %>' >
+        data-orig-lat= '<%= r.origin_address.latitude %>'
+        data-orig-lng= '<%= r.origin_address.longitude %>' 
+        data-dest-lat= '<%= r.destination_address.latitude %>'
+        data-dest-lng= '<%= r.destination_address.longitude %>' >
     </div>
   </div>
 
@@ -87,8 +84,46 @@
           <h4>$<%= r.gas_money %> per ride</h4>
           <button class='book-it btn btn-success btn-block' data-ride-id='<%= r.id %>'>
             <i class='icon-shopping-cart icon-large'></i>
-            Book It!
+            Pick up my kid!
           </button>
+        <% end %>
+      </div>
+    <% else %> 
+      <!--ride_creator_type == rider-->
+      <div class='well span3'>
+        <% ridership = r.riderships[0] %>
+        <% if r.driver.nil? %>
+          <span class='label label-important'>Willing to pay</span>
+          <h4>$<%= r.gas_money %> per ride</h4>
+          <button class='book-it btn btn-success btn-block' data-ride-id='<%= r.id %>'>
+            <i class='icon-shopping-cart icon-large'></i>
+            Pick up this kid!
+          </button>
+        <% else %>
+          <% case ridership.status %>
+          <% when 'offered' %>
+            <% if ridership.expiration > Time.now %>
+              <span class='label label-info'>Pending</span>
+              <p>You've already offered to help for this ride.</p>
+              <p>Time left to respond:</p>
+              <div class='countdown' data-expiration='<%= ridership.expiration.to_i %>' >
+              </div>
+              <%= link_to '#', class: 'btn btn-danger btn-block' do %>
+                <i class='icon-remove icon-large'></i>
+                Cancel Offer
+              <% end %>
+            <% else %>
+              <span class='label label-important'>Expired</span>
+            <% end %>
+          <% when 'accepted' %>
+              <span class='label label-success'>Accepted</span>
+              <p>Your offer has been accepted.</p>
+          <% when 'rejected' %>
+              <span class='label label-important'>Rejected</span>
+              <p>Your offer has been rejected.</p>
+          <% when 'confirmed' %>
+              <span class='label label-success'>Confirmed</span>
+          <% end %>
         <% end %>
       </div>
     <% end %>
@@ -107,10 +142,10 @@
       <% end %>
       <br></br>
       <br></br>
-      <div>
-        <i class='icon-ok icon-large'></i>
-        <div class='label label-success'>Facebook connected</div>
-      </div>
+      <!--<div>-->
+        <!--<i class='icon-ok icon-large'></i>-->
+        <!--<div class='label label-success'>Facebook connected</div>-->
+      <!--</div>-->
       <div>
         <i class='icon-ok icon-large'></i>
         <div class='label label-success'>Verified parent</div>

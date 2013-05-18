@@ -1,17 +1,19 @@
+<% cu = current_user %>
+
 <div class='row'>
 
   <div class='span9'>
     <div class='row'>
 
       <div class='span2'>
-        <%= image_tag(current_user.profile_photo('large'), class: 'img-polaroid') %>
+        <%= image_tag(cu.profile_photo('large'), class: 'img-polaroid') %>
         <div class='text-center'>
           <%= link_to 'My Profile', edit_user_registration_path %>
         </div>
       </div>
 
       <div class='span7'>
-        <h2>Hi, <%= current_user.first_name %>!</h2>
+        <h2>Hi, <%= cu.first_name %>!</h2>
         <hr></hr>
 
         <% flash.each do |name, msg| %>
@@ -25,7 +27,7 @@
           <% end %>
         <% end %>
 
-        <% current_user.rides_as_driver.each do |ride| %>
+        <% cu.rides_as_driver.each do |ride| %>
           <% if !ride.riders.empty? %>
             <% ride.riders.each do |rider| %>
               <% ridership = rider.riderships.where(ride_id: ride.id).first %>
@@ -51,14 +53,34 @@
                   </div>
                 </div>
 
+              <% elsif ridership.status == 'accepted' && ride.created_by != cu.id %>
+                <div class='alert alert-success'>
+                  <a class='close' data-dismiss='alert'>&#215;</a>
+                  <div class='row'>
+                    <div class='span1'>
+                      <%= image_tag rider.profile_photo('normal'), class: 'img-polaroid' %>
+                    </div>
+                    <div class='span5'>
+                      <p>
+                      <%= rider.first_name %> <%= rider.last_name %> has accepted your offer!
+                      </p>
+                      <%= link_to 'Confirm', confirm_ride_path(ride.id), class: 'btn btn-primary' %>
+                    </div>
+                  </div>
+                </div>
               <% end %>
             <% end %>
           <% end %>
         <% end %>
 
-        <% current_user.rides_as_rider.each do |ride| %>
-          <% if current_user.riderships.where(ride_id: ride.id).first.status == 'accepted' %>
+        <% cu.rides_as_rider.each do |ride| %>
+          <% ridership = cu.riderships.where(ride_id: ride.id).first %> 
 
+          <%#status==accepted means a booking or offer was accepted%>
+          <%#it could be accepted by the rider or by the driver%>
+          <%#we check if the creator is current user to distinguish%>
+
+          <% if ridership.status == 'accepted' && ride.created_by != cu.id %>
             <div class='alert alert-success'>
               <a class='close' data-dismiss='alert'>&#215;</a>
               <div class='row'>
@@ -73,7 +95,26 @@
                 </div>
               </div>
             </div>
-
+          <% elsif ridership.status == 'offered' %>
+            <div class='alert alert-success'>
+              <a class='close' data-dismiss='alert'>&#215;</a>
+              <div class='row'>
+                <div class='span1'>
+                  <%= image_tag ride.driver.profile_photo('normal'), class: 'img-polaroid' %>
+                </div>
+                <div class='span5'>
+                  <p>
+                  <%= ride.driver.first_name %> <%= ride.driver.last_name[0] %> has offered to pick your kid!
+                  </p>
+                  <%= link_to 'Respond', responding_to_ride_path(ride.id, { driver_id: ride.driver.id }), class: 'btn btn-primary' %>
+                  <p>
+                  <div class='countdown' data-expiration='<%= ridership.expiration.to_i %>' >
+                  </div>
+                  Time left to respond
+                  </p>
+                </div>
+              </div>
+            </div>
           <% end %>
         <% end %>
 
@@ -86,8 +127,8 @@
     <div class='row'>
       <div class='span9'>
         <h3>My Upcoming Rides</h3>
-        <% if !current_user.rides_as_driver.empty? %>
-          <% current_user.rides_as_driver.each do |r| %>
+        <% if !cu.rides_as_driver.empty? %>
+          <% cu.rides_as_driver.each do |r| %>
             <% r.riderships.each do |ridership| %>
               <% if ridership.status == 'accepted' || ridership.status == 'confirmed' %>
                 <% rider = User.find(ridership.user_id) %>
@@ -95,7 +136,7 @@
                 <hr></hr>
                 <h4>
                   <span class='text-info'>
-                    <%= current_user.first_name %> <%= current_user.last_name %>
+                    <%= cu.first_name %> <%= cu.last_name %>
                   </span>
                   is driving
                   <span class='text-info'>
@@ -104,15 +145,15 @@
                   <%= child.name %>
                 </h4>
                 <strong>
-                  From <%= r.schedule.start_time.to_date %> <%= r.schedule %>
+                  <%= render partial: 'describe_schedule', locals: { r: r }  %>
                 </strong>
               <% end %>
             <% end %>
           <% end %>
         <% end %>
 
-        <% if !current_user.rides_as_rider.empty? %>
-          <% current_user.rides_as_rider.each do |r| %>
+        <% if !cu.rides_as_rider.empty? %>
+          <% cu.rides_as_rider.each do |r| %>
             <% r.riderships.each do |ridership| %>
               <% if ridership.status == 'accepted' || ridership.status == 'confirmed' %>
                 <% driver = r.driver %>
@@ -124,19 +165,19 @@
                   </span>
                   is driving
                   <span class='text-info'>
-                    <%= current_user.first_name %> <%= current_user.last_name %>
+                    <%= cu.first_name %> <%= cu.last_name %>
                   </span>'s <%= son_or_daughter(child) %>
                   <%= child.name %>
                 </h4>
                 <strong>
-                  From <%= r.schedule.start_time.to_date %> <%= r.schedule %>
+                  <%= render partial: 'describe_schedule', locals: { r: r }  %>
                 </strong>
               <% end %>
             <% end %>
           <% end %>
         <% end %>
 
-        <% if current_user.rides_as_driver.empty? && current_user.rides_as_rider.empty? %>
+        <% if cu.rides_as_driver.empty? && cu.rides_as_rider.empty? %>
           <p class='lead text-info well'>
           You don't have any upcoming rides.
           </p>
@@ -147,15 +188,15 @@
     <div class='row'>
       <div class='span9'>
         <h3>My Rides</h3>
-        <% if current_user.rides_as_driver.empty? && current_user.rides_as_rider.empty? %>
+        <% if cu.rides_as_driver.empty? && cu.rides_as_rider.empty? %>
           <p class='lead text-info well'>
           Any time you add a ride of your own or are added to another user's ride it will be placed here for easy reference.
           </p>
         <% else %>
-          <% current_user.rides_as_driver.each do |r| %>
+          <% cu.rides_as_driver.each do |r| %>
             <%= render partial: 'ride_info_listing', locals: { r: r } %>
           <% end %>
-          <% current_user.rides_as_rider.each do |r| %>
+          <% cu.rides_as_rider.each do |r| %>
             <%= render partial: 'ride_info_listing', locals: { r: r } %>
           <% end %>
         <% end %>

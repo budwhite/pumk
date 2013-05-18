@@ -7,13 +7,8 @@
 
 <% @rides.each do |r| %>
 
-  <% if !r.driver_id.nil? %>
-    <% ride_creator = r.driver %>
-    <% ride_creator_type = 'driver' %>
-  <% else %>
-    <% ride_creator = r.riders.first %>
-    <% ride_creator_type = 'rider' %>
-  <% end %>
+  <% ride_creator = User.find(r.created_by) %>
+  <% ride_creator_type = r.created_as %>
 
   <div class='row'>
     <div class='span2'>
@@ -43,11 +38,20 @@
           <p>
           <span class='label label-inverse'>From</span> 
           <i class='icon-map-marker icon-large' style='color: green;'></i> 
-          <%= r.origin_address.full_street_address %>
+          <% if r.origin_address.user_id ==0 %>
+            <%= r.origin_address.name %>
+          <% else %>
+            <%= r.origin_address.full_street_address %>
+          <% end %>
           </p>
           <p>
           <span class='label label-inverse'>To</span> 
-          <i class='icon-map-marker icon-large' style='color: red;'></i> <%= r.destination_address.name %>
+          <i class='icon-map-marker icon-large' style='color: red;'></i> 
+          <% if r.destination_address.user_id ==0 %>
+            <%= r.destination_address.name %>
+          <% else %>
+            <%= r.destination_address.full_street_address %>
+          <% end %>
           </p>
         </div>
         <div class='span2'>
@@ -64,17 +68,21 @@
       </div>
       
       <strong>
-        From <%= r.schedule.start_time.to_date %> <%= r.schedule %>
+        <%= render partial: 'describe_schedule', locals: { r: r }  %>
       </strong>
       
     </div>
     <div class='span4'>
       <div class='map-canvas small' 
-        data-lat= '<%= r.origin_address.latitude %>'
-        data-lng= '<%= r.origin_address.longitude %>' >
+        data-orig-lat= '<%= r.origin_address.latitude %>'
+        data-orig-lng= '<%= r.origin_address.longitude %>' 
+        data-dest-lat= '<%= r.destination_address.latitude %>'
+        data-dest-lng= '<%= r.destination_address.longitude %>' >
       </div>
     </div>
   </div>
+
+  <hr></hr>
 <% end %>
 
 <div class='row well'>

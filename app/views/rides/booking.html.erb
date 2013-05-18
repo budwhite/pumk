@@ -1,5 +1,17 @@
+<%#offering means a potential driver offers to help a rider%>
+<%#if set to true, then this is a booking in which a parent offers to drive a kid%>
+<%#if set to false, then this is a booking in which a rider is asking for a driver%>
+
 <% r = @ride %>
-<% c = @child %>
+<% if !@child.nil? %>
+  <% c = @child %>
+  <% offering = false %>
+<% else %>
+  <%#taking shortcut here: assuming this ride is rider's only ride%>
+  <% rider = r.riders.first %>
+  <% c = Child.find(r.riderships.where(user_id: rider.id).first.child_id) %>
+  <% offering = true %>
+<% end %>
 
 <div class='row'>
   <div class='span8'>
@@ -8,48 +20,59 @@
       <div class='span8'>
         <div class='row'>
           <div class='span8'>
-            <p>
-            <span class='label label-inverse'>
-              <%= r.ride_type %> at Cherry Crest
-            </span>
-            for your <%= son_or_daughter(c) %> 
-            <strong><%= c.name.split[0].capitalize %></strong>
-            </p>
+            <% if offering %>
+              For <strong><%= rider.first_name %> <%= rider.last_name %></strong>'s
+              <%= son_or_daughter(c) %>
+              <strong><%= c.name %></strong>
+            <% else %>
+              <p>
+              For your <%= son_or_daughter(c) %> 
+              <strong><%= c.name %></strong>
+              </p>
+            <% end %>
             <p>
             <strong>
-              From <%= r.schedule.start_time.to_date %> <%= r.schedule %>
-          </strong>
+              <%= render partial: 'describe_schedule', locals: { r: r }  %>
+            </strong>
             </p>
           </div>
         </div>
         <div class='row'>
           <div class='span1'>
-            <%= image_tag r.driver.profile_photo('small'), class: 'img-polaroid' %>
+            <% if offering %>
+              <%= image_tag rider.profile_photo('small'), class: 'img-polaroid' %>
+            <% else %>
+              <%= image_tag r.driver.profile_photo('small'), class: 'img-polaroid' %>
+            <% end %>
           </div>
           <div class='span2'>
             <p><strong>Driver:</strong></p>
-            <p><%= r.driver.first_name %> <%= r.driver.last_name %></p>
+            <p><%= current_user.first_name %> <%= current_user.last_name %></p>
           </div>
           <div class='span5'>
             <p>
             <span class='label label-inverse'>From</span> 
             <i class='icon-map-marker icon-large' style='color: green;'></i> 
-            <%= r.origin_address.full_street_address %>
+            <% if r.origin_address.user_id ==0 %>
+              <%= r.origin_address.name %>
+            <% else %>
+              <%= r.origin_address.full_street_address %>
+            <% end %>
             </p>
             <p>
             <span class='label label-inverse'>To</span> 
-            <i class='icon-map-marker icon-large' style='color: red;'></i> <%= r.destination_address.name %>
+            <i class='icon-map-marker icon-large' style='color: red;'></i> 
+            <% if r.destination_address.user_id ==0 %>
+              <%= r.destination_address.name %>
+            <% else %>
+              <%= r.destination_address.full_street_address %>
+            <% end %>
             </p>
           </div>
         </div>
         <div class='row'>
           <span class='span2 lead'>
             Each Trip $<%= r.gas_money %>
-          </span>
-        </div>
-        <div class='row'>
-          <span class='span2 lead'>
-            Weekly $<%= r.gas_money * 5%>
           </span>
         </div>
       </div>
@@ -74,14 +97,22 @@
             label: 'Please provide your best contact number:',
             placeholder: 'phone number' %>
           <%= f.input 'booked_ride_id', as: :hidden, input_html: { value: r.id } %>
-          <%= f.input 'child_id', as: :hidden, input_html: { value: c.id } %>
+          <% if not offering %>
+            <%= f.input 'child_id', as: :hidden, input_html: { value: c.id } %>
+          <% end %>
         <% end %>
       </div>
     </div>
 
     <div class='row'>
       <div class='span4'>
-        <button class='btn btn-success btn-block submit'>Book It!</button>
+        <button class='btn btn-success btn-block submit'>
+          <% if offering %>
+            Pick up this kid!
+          <% else %>
+            Pick up my kid!
+          <% end %>
+        </button>
       </div>
     </div>
   </div>
