@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 group :production do
   gem 'newrelic_rpm'
+  gem 'psych'
 end
 
 group :development, :test do
