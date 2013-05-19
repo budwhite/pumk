@@ -135,13 +135,14 @@
                 <% child = Child.find(ridership.child_id) %>
                 <hr></hr>
                 <h4>
-                  <span class='text-info'>
+                  <%= link_to user_path(cu.id) do %>
                     <%= cu.first_name %> <%= cu.last_name %>
-                  </span>
+                  <% end %>
                   is driving
-                  <span class='text-info'>
+                  <%= link_to user_path(rider.id) do %>
                     <%= rider.first_name %> <%= rider.last_name %>
-                  </span>'s <%= son_or_daughter(child) %>
+                  <% end %>
+                  's <%= son_or_daughter(child) %>
                   <%= child.name %>
                 </h4>
                 <strong>
@@ -160,13 +161,14 @@
                 <% child = Child.find(ridership.child_id) %>
                 <hr></hr>
                 <h4>
-                  <span class='text-info'>
+                  <%= link_to user_path(driver.id) do %>
                     <%= driver.first_name %> <%= driver.last_name %>
-                  </span>
+                  <% end %>
                   is driving
-                  <span class='text-info'>
+                  <%= link_to user_path(cu.id) do %>
                     <%= cu.first_name %> <%= cu.last_name %>
-                  </span>'s <%= son_or_daughter(child) %>
+                  <% end %>
+                  's <%= son_or_daughter(child) %>
                   <%= child.name %>
                 </h4>
                 <strong>

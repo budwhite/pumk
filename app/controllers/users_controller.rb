@@ -2,12 +2,20 @@ class UsersController < ApplicationController
   before_filter :authenticate_user!
 
   def show
-    if current_user.sign_in_count == 1
-      unless session[:already_welcomed]
-        flash.now[:success] = 'Welcome to PickUpMyKid!'
-        session[:already_welcomed] = true
+    if current_user.id == params[:id].to_i
+      if current_user.sign_in_count == 1
+        unless session[:already_welcomed]
+          flash.now[:success] = 'Welcome to PickUpMyKid!'
+          session[:already_welcomed] = true
+        end
       end
+    else
+      @user = User.find(params[:id])
+      render :show_other
     end
+  end
+
+  def show_other
   end
 
   def update

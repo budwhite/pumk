@@ -99,7 +99,8 @@
           <%= simple_form_for r, 
             html: { class: 'form-horizontal' },
             url: url_for(controller: 'rides', action: 'responded'), method: :put do |f| %>
-            <%= f.input :phone_number, as: :string, input_html: { value: '' },
+            <%= f.input :phone_number, as: :string, 
+              input_html: { value: number_to_phone(current_user.phone_number) },
               label: 'Please provide your best contact number:',
               placeholder: 'phone number' %>
             <%= f.input :comment, input_html: { rows: 5 },
