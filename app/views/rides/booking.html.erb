@@ -46,8 +46,12 @@
             <% end %>
           </div>
           <div class='span2'>
-            <p><strong>Driver:</strong></p>
-            <p><%= current_user.first_name %> <%= current_user.last_name %></p>
+            <p><span class='label label-inverse'>Driver</span></p>
+            <% if offering %>
+              <p><strong><%= current_user.first_name %> <%= current_user.last_name %></strong></p>
+            <% else %>
+              <p><strong><%= r.driver.first_name %> <%= r.driver.last_name %></strong></p>
+            <% end %>
           </div>
           <div class='span5'>
             <p>
@@ -95,7 +99,8 @@
           url: url_for(controller: 'rides', action: 'booked'), method: :put do |f| %>
           <%= f.input :phone_number,
             label: 'Please provide your best contact number:',
-            placeholder: 'phone number' %>
+            placeholder: 'phone number',
+            input_html: { value: number_to_phone(current_user.phone_number) } %>
           <%= f.input 'booked_ride_id', as: :hidden, input_html: { value: r.id } %>
           <% if not offering %>
             <%= f.input 'child_id', as: :hidden, input_html: { value: c.id } %>
