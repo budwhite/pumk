@@ -15,9 +15,13 @@
 <div class='row'>
   <div class='span12'>
     <h3>
-      <%= r.origin_address.street1 %>, <%= r.origin_address.city %>
+      <span class='text-success'>
+        <%= r.origin_address.street1 %>, <%= r.origin_address.city %>
+      </span>
       <i class='icon-arrow-right icon-large'></i>
-      <%= r.destination_address.street1 %>, <%= r.destination_address.city %>
+      <span class='text-error'>
+        <%= r.destination_address.street1 %>, <%= r.destination_address.city %>
+      </span>
     </h3>
   </div>
 </div>
@@ -104,7 +108,15 @@
           <% when 'offered' %>
             <% if ridership.expiration > Time.now %>
               <span class='label label-info'>Pending</span>
-              <p>You've already offered to help for this ride.</p>
+              <% if current_user == r.driver %>
+                <p>You've already offered to help for this ride.</p>
+              <% else %>
+                <p>
+                <%= link_to user_path(r.driver.id) do %> 
+                  <%= r.driver.first_name %> <%= r.driver.last_name %>
+                <% end %> has already offered to pick up your kid.
+                </p>
+              <% end %>
               <p>Time left to respond:</p>
               <div class='countdown' data-expiration='<%= ridership.expiration.to_i %>' >
               </div>
@@ -146,6 +158,14 @@
         <!--<i class='icon-ok icon-large'></i>-->
         <!--<div class='label label-success'>Facebook connected</div>-->
       <!--</div>-->
+      <p>
+      <i class='icon-phone icon-large'></i>
+      <a href='tel:<%= ride_creator.phone_number %>'><%= number_to_phone(ride_creator.phone_number) %></a>
+      </p>
+      <p>
+      <i class='icon-envelope icon-large'></i>
+      <a href='mailto:<%= ride_creator.email %>'><%= ride_creator.email %></a>
+      </p>
       <div>
         <i class='icon-ok icon-large'></i>
         <div class='label label-success'>Verified parent</div>

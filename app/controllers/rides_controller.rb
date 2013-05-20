@@ -1,4 +1,6 @@
 class RidesController < ApplicationController
+  before_filter :authenticate_user!
+
   include IceCube
 
   def index

@@ -1,0 +1,129 @@
+<% cu = current_user %>
+
+<!--go through all riderships, find those in which current user is a rider, or whose rides'-->
+<!--driver is current user-->
+
+<% rs_rr = cu.riderships.reject { |x| x.status == 'created' } %>
+<% rs_dr = Array.new %>
+<% cu.rides_as_driver.each do |r| %> 
+  <% rs_dr << r.riderships %>
+<% end %>
+<% rs_dr = rs_dr.flatten(1) %>
+
+<% if rs_rr.empty? && rs_dr.empty? %>
+  <p class='lead text-info well'>
+  You don't have any upcoming rides.
+  </p>
+<% else %>
+  <!--current user is rider-->
+  <% if !rs_rr.empty? %>
+    <% rs_rr.each do |rds| %>
+      <% driver = rds.ride.driver %>
+      <% ride = rds.ride %>
+      <% rider = cu %>
+      <% child = Child.find(rds.child_id) %>
+      <hr></hr>
+      <h4>
+        <%= link_to user_path(driver.id) do %>
+          <%= driver.first_name %> <%= driver.last_name %>
+        <% end %>
+        is driving
+        <%= link_to user_path(rider.id) do %>
+          <%= rider.first_name %> <%= rider.last_name %>
+        <% end %>
+        's <%= son_or_daughter(child) %>
+        <%= child.name %>
+        <% if rds.status != 'accepted' && rds.status != 'confirmed' %> 
+          <span class='label label-warning'>Pending</span>
+        <% end %>
+        <%= link_to 'More info', ride_path(ride.id), class: 'pull-right btn btn-primary' %>
+      </h4>
+      <strong>
+        <%= render partial: 'describe_schedule', locals: { r: ride }  %>
+      </strong>
+    <% end %>
+  <% end %>
+  <!--current user is driver-->
+  <% if !rs_dr.empty? %>
+    <% rs_dr.each do |rds| %>
+      <% driver = cu %>
+      <% ride = rds.ride %>
+      <% rider = rds.user %>
+      <% child = Child.find(rds.child_id) %>
+      <hr></hr>
+      <h4>
+        <%= link_to user_path(driver.id) do %>
+          <%= driver.first_name %> <%= driver.last_name %>
+        <% end %>
+        is driving
+        <%= link_to user_path(rider.id) do %>
+          <%= rider.first_name %> <%= rider.last_name %>
+        <% end %>
+        's <%= son_or_daughter(child) %>
+        <%= child.name %>
+        <% if rds.status != 'accepted' && rds.status != 'confirmed' %> 
+          <span class='label label-warning'>Pending</span>
+        <% end %>
+        <%= link_to 'More info', ride_path(ride.id), class: 'pull-right btn btn-primary' %>
+      </h4>
+      <strong>
+        <%= render partial: 'describe_schedule', locals: { r: ride }  %>
+      </strong>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% if !cu.rides_as_driver.empty? %>
+  <% cu.rides_as_driver.each do |r| %>
+    <% r.riderships.each do |ridership| %>
+      <% if ridership.status == 'accepted' || ridership.status == 'confirmed' %>
+        <% rider = User.find(ridership.user_id) %>
+        <% child = Child.find(ridership.child_id) %>
+        <hr></hr>
+        <h4>
+          <%= link_to user_path(cu.id) do %>
+            <%= cu.first_name %> <%= cu.last_name %>
+          <% end %>
+          is driving
+          <%= link_to user_path(rider.id) do %>
+            <%= rider.first_name %> <%= rider.last_name %>
+          <% end %>
+          's <%= son_or_daughter(child) %>
+          <%= child.name %>
+        </h4>
+        <strong>
+          <%= render partial: 'describe_schedule', locals: { r: r }  %>
+        </strong>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% if !cu.rides_as_rider.empty? %>
+  <% cu.rides_as_rider.each do |r| %>
+    <% r.riderships.each do |ridership| %>
+      <% if ridership.status == 'accepted' || ridership.status == 'confirmed' %>
+        <% driver = r.driver %>
+        <% child = Child.find(ridership.child_id) %>
+        <hr></hr>
+        <h4>
+          <%= link_to user_path(driver.id) do %>
+            <%= driver.first_name %> <%= driver.last_name %>
+          <% end %>
+          is driving
+          <%= link_to user_path(cu.id) do %>
+            <%= cu.first_name %> <%= cu.last_name %>
+          <% end %>
+          's <%= son_or_daughter(child) %>
+          <%= child.name %>
+        </h4>
+        <strong>
+          <%= render partial: 'describe_schedule', locals: { r: r }  %>
+        </strong>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% if cu.rides_as_driver.empty? && cu.rides_as_rider.empty? %>
+<% end %>

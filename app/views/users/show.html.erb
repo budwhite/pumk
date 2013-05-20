@@ -117,88 +117,28 @@
             </div>
           <% end %>
         <% end %>
-
-        <%= render partial: 'get_started_alert' %>
-
+        <%= render 'get_started_alert' %>
       </div>
-
     </div>
 
     <div class='row'>
       <div class='span9'>
         <h3>My Upcoming Rides</h3>
-        <% if !cu.rides_as_driver.empty? %>
-          <% cu.rides_as_driver.each do |r| %>
-            <% r.riderships.each do |ridership| %>
-              <% if ridership.status == 'accepted' || ridership.status == 'confirmed' %>
-                <% rider = User.find(ridership.user_id) %>
-                <% child = Child.find(ridership.child_id) %>
-                <hr></hr>
-                <h4>
-                  <%= link_to user_path(cu.id) do %>
-                    <%= cu.first_name %> <%= cu.last_name %>
-                  <% end %>
-                  is driving
-                  <%= link_to user_path(rider.id) do %>
-                    <%= rider.first_name %> <%= rider.last_name %>
-                  <% end %>
-                  's <%= son_or_daughter(child) %>
-                  <%= child.name %>
-                </h4>
-                <strong>
-                  <%= render partial: 'describe_schedule', locals: { r: r }  %>
-                </strong>
-              <% end %>
-            <% end %>
-          <% end %>
-        <% end %>
-
-        <% if !cu.rides_as_rider.empty? %>
-          <% cu.rides_as_rider.each do |r| %>
-            <% r.riderships.each do |ridership| %>
-              <% if ridership.status == 'accepted' || ridership.status == 'confirmed' %>
-                <% driver = r.driver %>
-                <% child = Child.find(ridership.child_id) %>
-                <hr></hr>
-                <h4>
-                  <%= link_to user_path(driver.id) do %>
-                    <%= driver.first_name %> <%= driver.last_name %>
-                  <% end %>
-                  is driving
-                  <%= link_to user_path(cu.id) do %>
-                    <%= cu.first_name %> <%= cu.last_name %>
-                  <% end %>
-                  's <%= son_or_daughter(child) %>
-                  <%= child.name %>
-                </h4>
-                <strong>
-                  <%= render partial: 'describe_schedule', locals: { r: r }  %>
-                </strong>
-              <% end %>
-            <% end %>
-          <% end %>
-        <% end %>
-
-        <% if cu.rides_as_driver.empty? && cu.rides_as_rider.empty? %>
-          <p class='lead text-info well'>
-          You don't have any upcoming rides.
-          </p>
-        <% end %>
+        <%= render 'upcoming_ride_listing' %>
       </div>
     </div>
 
+    <br></br>
     <div class='row'>
       <div class='span9'>
-        <h3>My Rides</h3>
-        <% if cu.rides_as_driver.empty? && cu.rides_as_rider.empty? %>
+        <h3>My Posted Rides</h3>
+        <% rides = Ride.where(created_by: cu.id) %>  
+        <% if rides.empty? %>
           <p class='lead text-info well'>
           Any time you add a ride of your own or are added to another user's ride it will be placed here for easy reference.
           </p>
         <% else %>
-          <% cu.rides_as_driver.each do |r| %>
-            <%= render partial: 'ride_info_listing', locals: { r: r } %>
-          <% end %>
-          <% cu.rides_as_rider.each do |r| %>
+          <% rides.each do |r| %>
             <%= render partial: 'ride_info_listing', locals: { r: r } %>
           <% end %>
         <% end %>

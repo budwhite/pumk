@@ -23,8 +23,14 @@
     </p>
   </div>
   <div class='span4'>
-    <p><strong><%= asker.email %></strong></p>
-    <p><strong><%= asker.phone_number %></strong></p>
+    <p>
+    <i class='icon-phone icon-large'></i>
+    <a href='tel:<%= asker.phone_number %>'><%= number_to_phone(asker.phone_number) %></a>
+    </p>
+    <p>
+    <i class='icon-envelope icon-large'></i>
+    <a href='mailto:<%= asker.email %>'><%= asker.email %></a>
+    </p>
   </div>
 </div>
 
