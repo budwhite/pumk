@@ -1,5 +1,5 @@
 class RideStatusMailer < ActionMailer::Base
-  default from: "notification@pickupmykid.com"
+  default from: "\"PickUpMyKid\" <notification@pickupmykid.com>"
   add_template_helper(ApplicationHelper)
 
   def ride_posted
