@@ -21,6 +21,8 @@ class User < ActiveRecord::Base
   # @user.rides_as_rider
   has_many :rides_as_rider, :source => :ride, :through => :riderships
 
+  validates :first_name, :last_name, presence: true
+
   mount_uploader :avatar, AvatarUploader
 
   def self.from_omniauth(auth)

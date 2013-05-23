@@ -19,3 +19,5 @@
 //= require jquery.countdown
 //= require recurring_select
 //= require bootstrap-editable
+//= require rails.validations
+//= require rails.validations.simple_form
