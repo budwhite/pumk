@@ -61,7 +61,7 @@
   <div class='row'>
     <div class='span7'>
       <% if ride_creator == current_user %>
-        <%= link_to '#', class: 'btn btn-primary' do %>
+        <%= link_to edit_ride_path(r.id), class: 'btn btn-primary' do %>
           <i class='icon-edit icon-large'></i>
           Edit Ride 
         <% end %>

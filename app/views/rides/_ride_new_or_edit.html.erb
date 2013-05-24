@@ -1,0 +1,131 @@
+<% flash.each do |name, msg| %>
+  <% if msg.class == Array %>
+    <% msg.each do |message| %>
+      <div class='alert alert-error'>
+        <a class='close' data-dismiss='alert'>&#215;</a>
+        <%= content_tag :div, message, id: "flash_#{name}" %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class='alert alert-error'>
+      <a class='close' data-dismiss='alert'>&#215;</a>
+      <%= content_tag :div, msg, :id => "flash_#{name}" %>
+    </div>
+  <% end %>
+<% end %>
+
+<%= simple_form_for @ride, :html => { :class => 'form-horizontal' }, validate: true do |f| %>
+
+  <h4>Do you need help or want to help out?</h4>
+  <% creator_types = ['offering to drive?', 'looking for help with drop-off or pick-up?'] %>
+  <% created_as = @ride.created_as %>
+  <% if !created_as.nil? %>
+    <% if created_as == 'driver' %>
+      <% creator_type = creator_types[0] %>
+    <% else %>
+      <% creator_type = creator_types[1] %>
+      <% child_id = @ride.riderships.where(user_id: cu.id).first.child_id %>
+    <% end %>
+  <% else %>
+    <% creator_type = creator_types[0] %>
+  <% end %>
+
+  <%= f.input :creator_type, 
+    label: 'Are you',
+    as: :radio_buttons,
+    collection: creator_types,
+    checked: creator_type %>
+
+  <% children_name_col = current_user.children.collect { |x| x[:name].capitalize } %>
+  <% if !child_id.nil? %>
+    <% child_name = Child.find(child_id).name.capitalize %>
+  <% else %>
+    <% child_name = children_name_col[0] %>
+  <% end %>
+
+  <%= f.input :for_which_child,
+    label: 'For which child',
+    as: :select,
+    collection: children_name_col,
+    selected: child_name %>
+
+  <h4 class='ride-type-question'>What kind of ride are you offering?</h4>
+
+  <%= f.input :ride_type, collection: Ride::RIDE_TYPES, as: :radio_buttons, item_wrapper_class: 'inline', default: Ride::RIDE_TYPES.first, validate: { presence: true } %>
+
+  <% all_addresses = current_user.addresses + Address.where(user_id: 0).all %>
+  <% if !@ride.origin_address.nil? %>
+    <% orig_addr_name = Address.find(@ride.origin_address_id).name %>
+  <% else %>
+    <% orig_addr_name = all_addresses[0].name %>
+  <% end %>
+  <% if !@ride.destination_address.nil? %>
+    <% dest_addr_name = Address.find(@ride.destination_address_id).name %>
+  <% else %>
+    <% dest_addr_name = all_addresses[1].name %>
+  <% end %>
+
+  <%= f.input :origin, label: 'From', as: :select, selected: orig_addr_name,
+    collection: all_addresses.map { |a| a[:name] } %>
+  <%= f.input :destination, label: 'To', as: :select, selected: dest_addr_name,
+    collection: all_addresses.map { |a| a[:name] } %>
+
+  <% if !@ride.schedule.nil? %>
+    <% time = @ride.schedule.start_time.strftime('%I:%M %p') %>
+  <% else %>
+    <% time = '07:55 AM' %>
+  <% end %>
+  <%= f.input :time, label: 'Arriving at', wrapper: :append do%>
+    <%= f.input_field :time, class: 'rideTime input-small', value: time %>
+    <%= content_tag :span, class: 'add-on' do %>
+      <i class='icon-time'></i>
+    <% end %>
+  <% end %>
+
+  <h4>What kind of schedule are you looking at?</h4>
+  <% if @ride.persisted? %>
+    <% rule = @ride.schedule.recurrence_rules[0] %>
+  <% else %>
+    <% rule = IceCube::Rule.weekly.day(:monday, :tuesday, :wednesday, :thursday, :friday) %> 
+  <% end %>
+  <div class='control-group select optional'>
+    <div class='controls'>
+      <%= f.select_recurring :recurring_rules, [rule] %>
+  </div>
+</div>
+
+<% if @ride.persisted? %>
+  <% from_val = @ride.schedule.start_time.strftime('%m/%d/%Y') %>
+<% else %>
+  <% from_val = Date.today.strftime('%m/%d/%Y') %>
+<% end %>
+
+<%= f.input :from_date, label: 'From', wrapper: :append do %>
+  <%= f.input_field :from_date, class: 'rideDateFrom input-small', value: from_val %>
+  <%= content_tag :span, class: 'add-on' do %>
+    <i class='icon-calendar'></i>
+  <% end %>
+<% end %>
+
+<% if @ride.persisted? %>
+  <% to_val = @ride.schedule.recurrence_rules[0].until_date.strftime('%m/%d/%Y') %>
+<% else %>
+  <% to_val = Date.new(2013,6,19).strftime('%m/%d/%Y') %>
+<% end %>
+
+<%= f.input :to_date, label: 'To', hint: 'School ends on this date', wrapper: :append do %>
+  <%= f.input_field :to_date, class: 'rideDateTo input-small', value: to_val %>
+  <%= content_tag :span, class: 'add-on' do %>
+    <i class='icon-calendar'></i>
+  <% end %>
+<% end %>
+
+<h4 class='ride-fare-question'>How much do you want each of your little riders to contribute, per ride?</h4>
+
+<%= f.input :gas_money, label: '$', default: 5,
+  collection: 0..20, input_html: { class: 'input-mini' } %>
+<%= f.input :seats_total, label: 'How many seats', default: 1,
+  collection: 1..4, input_html: { class: 'input-mini' } %>
+<%= f.button :submit, 'Save!', :class => 'btn btn-primary' %>
+
+  <% end %>

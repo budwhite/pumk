@@ -22,8 +22,8 @@ class Ride < ActiveRecord::Base
   belongs_to :destination_address, class_name: 'Address'
 
   RIDE_TYPES = ['Drop-off', 'Pick-up']
-  validates_inclusion_of :ride_type, in: RIDE_TYPES,
-    message: "{{value}} must be in #{RIDE_TYPES.join ', '}"
+
+  validates :ride_type, :seats_total, :origin_address_id, :destination_address_id, :gas_money, :schedule, presence: true
 
   def schedule=(new_schedule)
     write_attribute(:schedule, new_schedule.to_hash)
