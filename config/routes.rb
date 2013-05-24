@@ -16,6 +16,7 @@ Love::Application.routes.draw do
   get '/rides/responding/:id', to: 'rides#responding', as: 'responding_to_ride'
 
   resources :addresses
+  resources :children, only: [:destroy]
 
   root :to => 'home#index'
 end

@@ -3,46 +3,55 @@
   <legend>My <%= pluralize(cu.children.count, 'kid').split[1] %></legend>
   <div style='width:40%'>
     <% cu.children.each do |c| %>
-      <table class='child table table-striped table-bordered' data-cuid='<%= cu.id %>'>
-        <tr>
-          <td width='40%'><strong>Name</strong></td>
-          <td>
-            <a href='#' data-name='name' data-type='text' data-pk='<%= c.id %>'>
-              <%= c.name %>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td><strong>Gender</strong></td>
-          <td>
-            <a href='#' data-name='gender' data-type='select' data-pk='<%= c.id %>' data-source="[ {value: 'female', text: 'girl'}, {value: 'male', text: 'boy'} ]">
-              <% if c.gender == 'female' %>
-                girl
-              <% else %>
-                boy
-              <% end %>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td><strong>Grade</strong></td>
-          <td>
-            <a href='#' data-name='grade' data-type='select' data-pk='<%= c.id %>' data-source="[ {value: 'K', text: 'K'}, {value: '1st', text: '1st'}, {value: '2nd', text: '2nd'}, {value: '3rd', text: '3rd'}, {value: '4th', text: '4th'}, {value: '5th', text: '5th'} ]">
-              <%= c.grade %>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td><strong>Teacher</strong></td>
-          <td>
-            <a href='#' data-name='teacher' data-type='text' data-pk='<%= c.id %>'>
-              <%= c.teacher %>
-            </a>
-          </td>
-        </tr>
-      </table>
-      <button class='toggle-edit btn pull-right' data-model='child' data-id='<%= c.id %>'>Edit</button>
-      <br></br>
+      <div class='well'>
+        <table class='child table table-striped table-bordered' data-cuid='<%= cu.id %>'>
+          <tr>
+            <td width='40%'><strong>Name</strong></td>
+            <td>
+              <a href='#' data-name='name' data-type='text' data-pk='<%= c.id %>'>
+                <%= c.name %>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Gender</strong></td>
+            <td>
+              <a href='#' data-name='gender' data-type='select' data-pk='<%= c.id %>' data-source="[ {value: 'female', text: 'girl'}, {value: 'male', text: 'boy'} ]">
+                <% if c.gender == 'female' %>
+                  girl
+                <% else %>
+                  boy
+                <% end %>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Grade</strong></td>
+            <td>
+              <a href='#' data-name='grade' data-type='select' data-pk='<%= c.id %>' data-source="[ {value: 'K', text: 'K'}, {value: '1st', text: '1st'}, {value: '2nd', text: '2nd'}, {value: '3rd', text: '3rd'}, {value: '4th', text: '4th'}, {value: '5th', text: '5th'} ]">
+                <%= c.grade %>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Teacher</strong></td>
+            <td>
+              <a href='#' data-name='teacher' data-type='text' data-pk='<%= c.id %>'>
+                <%= c.teacher %>
+              </a>
+            </td>
+          </tr>
+        </table>
+        <div class='pull-right'>
+          <button class='toggle-edit btn' data-model='child' data-id='<%= c.id %>' data-toggle='button'>
+            <i class='icon-edit'></i> Edit
+          </button>
+          <%= link_to c, method: 'delete', data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' do %>
+            <i class='icon-remove'></i> Delete
+          <% end %>
+        </div>
+        <br></br>
+      </div>
     <% end %>
   </div>
 <% end %>

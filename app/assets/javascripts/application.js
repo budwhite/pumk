@@ -21,3 +21,5 @@
 //= require bootstrap-editable
 //= require rails.validations
 //= require rails.validations.simple_form
+//= require jquery.cookie
+//= require jquery-fileupload

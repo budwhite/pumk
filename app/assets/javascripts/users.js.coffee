@@ -1,4 +1,6 @@
 $ ->
+
+  #---------------------------------------------------------------------------------#
   # countdown stuff
   $countdown = $('div.countdown')
   if $countdown.length > 0
@@ -9,6 +11,18 @@ $ ->
       layout: "<h3 class='text-error'>{hnn}{sep}{mnn}{sep}{snn}</h3>"
     }
 
+
+  #---------------------------------------------------------------------------------#
+  # remember tab position via cookie
+  $('a[data-toggle="tab"]').on 'shown', (e) ->
+    $.cookie 'last_tab', $(e.target).attr 'href'
+
+  lastTab = $.cookie('last_tab')
+  if lastTab
+    $('a[href=' + lastTab + ']').tab 'show'
+
+
+  #---------------------------------------------------------------------------------#
   # x-editable stuff
   #$.fn.editable.defaults.mode = 'inline'
 
@@ -33,10 +47,12 @@ $ ->
         if data && data.id
           $(@).editable 'option', 'pk', data.id
           $(@).removeClass 'editable-unsaved'
-          msg = 'New address created! Refresh the page to see updated list'
+          msg = 'New address created!'
           $('#msg-addr').addClass('alert-success').removeClass('alert-error').html(msg).show()
           $('#save-addr-btn').hide()
           $(@).off 'save.newaddress'
+          callback = -> location.reload(true)
+          setTimeout callback, 1000
         else if data && data.errors
           config.error.call @, data.errors
       error: (errors) ->
@@ -70,10 +86,12 @@ $ ->
         if data && data.id
           $(@).editable 'option', 'pk', data.id
           $(@).removeClass 'editable-unsaved'
-          msg = 'New child added! Refresh the page to see updated list'
+          msg = 'New child added!'
           $('#msg-child').addClass('alert-success').removeClass('alert-error').html(msg).show()
           $('#save-child-btn').hide()
           $(@).off 'save.newchild'
+          callback = -> location.reload(true)
+          setTimeout callback, 1000
         else if data && data.errors
           config.error.call @, data.errors
       error: (errors) ->
@@ -102,3 +120,8 @@ $ ->
 
   $('.editable').editable 'disable'
   $('table.new a').editable 'enable'
+
+
+  #---------------------------------------------------------------------------------#
+  # picture upload stuff
+  $('picture_upload').fileupload()

@@ -3,50 +3,59 @@
   <legend>My current <%= pluralize(cu.addresses.count, 'address').split[1] %></legend>
   <div style='width:40%'>
     <% cu.addresses.each do |a| %>
-      <table class='address table table-striped table-bordered' data-cuid='<%= cu.id %>'>
-        <tr>
-          <td width='40%'><strong>Name</strong></td>
-          <td>
-            <a href='#' data-name='name' data-type='text' data-pk='<%= a.id %>'>
-              <%= a.name %>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td><strong>Street</strong></td>
-          <td>
-            <a href='#' data-name='street1' data-type='text' data-pk='<%= a.id %>'>
-              <%= a.street1 %>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td><strong>City</strong></td>
-          <td>
-            <a href='#' data-name='city' data-type='text' data-pk='<%= a.id %>'>
-              <%= a.city %>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td><strong>State</strong></td>
-          <td>
-            <a href='#' data-name='state' data-type='text' data-pk='<%= a.id %>'>
-              <%= a.state %>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td><strong>Zipcode</strong></td>
-          <td>
-            <a href='#' data-name='zipcode' data-type='text' data-pk='<%= a.id %>'>
-              <%= a.zipcode %>
-            </a>
-          </td>
-        </tr>
-      </table>
-      <button class='toggle-edit btn pull-right' data-model='address' data-id='<%= a.id %>'>Edit</button>
-      <br></br>
+      <div class='well'>
+        <table class='address table table-striped table-bordered' data-cuid='<%= cu.id %>'>
+          <tr>
+            <td width='40%'><strong>Address Name</strong></td>
+            <td>
+              <a href='#' data-name='name' data-type='text' data-pk='<%= a.id %>'>
+                <%= a.name %>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Street</strong></td>
+            <td>
+              <a href='#' data-name='street1' data-type='text' data-pk='<%= a.id %>'>
+                <%= a.street1 %>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>City</strong></td>
+            <td>
+              <a href='#' data-name='city' data-type='text' data-pk='<%= a.id %>'>
+                <%= a.city %>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>State</strong></td>
+            <td>
+              <a href='#' data-name='state' data-type='text' data-pk='<%= a.id %>'>
+                <%= a.state %>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Zipcode</strong></td>
+            <td>
+              <a href='#' data-name='zipcode' data-type='text' data-pk='<%= a.id %>'>
+                <%= a.zipcode %>
+              </a>
+            </td>
+          </tr>
+        </table>
+        <div class='pull-right'>
+          <button class='toggle-edit btn' data-model='address' data-id='<%= a.id %>' data-toggle='button'>
+            <i class='icon-edit'></i> Edit
+          </button>
+          <%= link_to a, method: 'delete', data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' do %>
+            <i class='icon-remove'></i> Delete
+          <% end %>
+        </div>
+        <br></br>
+      </div>
     <% end %>
   </div>
 <% end %>
@@ -56,8 +65,8 @@
   <div id='msg-addr' class='alert hide'></div>
   <table class='address new table table-striped table-bordered' data-cuid='<%= cu.id %>'>
     <tr>
-      <td width='40%'><strong>Name</strong></td>
-      <td><a href='#' data-name='name' data-type='text'></a></td>
+      <td width='40%'><strong>Address Name</strong></td>
+      <td><a href='#' data-name='name' data-type='text' data-placeholder='Home, Soccer etc.'></a></td>
     </tr>
     <tr>
       <td><strong>Street</strong></td>

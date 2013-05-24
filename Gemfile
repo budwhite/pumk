@@ -48,3 +48,5 @@ gem 'carrierwave'
 gem 'mini_magick'
 gem 'recurring_select'
 gem 'bootstrap-x-editable-rails'
+gem 'jquery-cookie-rails'
+gem "jquery-fileupload-rails"
