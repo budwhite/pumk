@@ -61,10 +61,10 @@
               <p>Time left to respond:</p>
               <div class='countdown' data-expiration='<%= ridership.expiration.to_i %>' >
               </div>
-              <%= link_to '#', class: 'btn btn-danger btn-block' do %>
-                <i class='icon-remove icon-large'></i>
-                Cancel Request
-              <% end %>
+              <%# link_to '#', class: 'btn btn-danger btn-block' do %>
+                <%#<i class='icon-remove icon-large'></i>%>
+                <%#Cancel Request%>
+              <%#end %>
             <% else %>
               <span class='label label-important'>Expired</span>
             <% end %>
