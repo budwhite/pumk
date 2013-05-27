@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body>
+    <p>
+    <%= @greeting %> <%= @driver.first_name %>, 
+    </p>
+
+    <p>
+    Guess what, <%= @booker.first_name %> <%= @booker.last_name %> has booked your ride for <%= pronoun(@booker) %> <%= son_or_daughter(@child) %> <%= @child.name %>! 
+    </p>
+
+    <p>
+    <%= @child.name %> is a <%= grader(@child.grade) %> in <%= @child.teacher %>'s class.
+    </p>
+
+    <p>
+    Please log in at <a href='http://www.pickupmykid.com'>PickUpMyKid.com</a> to view details.
+    </p>
+  </body>
+</html>

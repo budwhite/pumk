@@ -47,4 +47,8 @@ class RideStatusMailer < ActionMailer::Base
 
     mail to: "to@example.org"
   end
+
+  def test
+    mail to: 'foo@bar.com'
+  end
 end

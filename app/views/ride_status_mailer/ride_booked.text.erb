@@ -1,5 +1,7 @@
 <%= @greeting %> <%= @driver.first_name %>, 
 
-Guess what, <%= @booker.first_name %> <%= @booker.last_name %> has booked your ride for <%= son_or_daughter(@child) %> <%= @child.name %>! Please log in at PickUpMyKid.com to view details.
+Guess what, <%= @booker.first_name %> <%= @booker.last_name %> has booked your ride for <%= pronoun(@booker) %> <%= son_or_daughter(@child) %> <%= @child.name %>! 
 
-thanks,
+<%= @child.name %> is a <%= grader(@child.grade) %> in <%= @child.teacher %>'s class.
+
+Please log in at PickUpMyKid.com to view details.

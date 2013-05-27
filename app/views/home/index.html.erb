@@ -19,6 +19,7 @@
     </span>
     </li>
   </ul>
+  <%= link_to 'More Info', home_about_path, class: 'btn btn-primary btn-large' %>
 </div>
 
 <div class='row-fluid'>
@@ -44,7 +45,10 @@
   <div class='span6'>
 
     <%= simple_form_for resource, as: resource_name, url: registration_path(resource_name), html: { class: 'form-horizontal' }, validate: true do |f| %>
-      <legend>Sign up</legend>
+      <legend>
+        Sign up <span class='label label-info'>Note!</span>
+        <small><strong>For Cherry Crest parents and staff only.</strong></small>
+      </legend>
       <% if !session[:signup_fail].nil? %>
         <%= render 'show_flash' %>
         <% session.delete(:signup_fail) %>
@@ -55,7 +59,7 @@
       <%= f.input :password, validate: true  %>
       <%= f.input :password_confirmation, validate: true %>
       <%= f.input :verified, as: :hidden, input_html: { checked: false } %>
-      <%= f.button :submit, 'Create New User', class: 'btn-success' %>
+      <%= f.button :submit, 'Register', class: 'btn-success' %>
     <% end %>
 
   </div>
