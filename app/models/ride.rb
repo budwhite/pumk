@@ -23,7 +23,7 @@ class Ride < ActiveRecord::Base
 
   RIDE_TYPES = ['Drop-off', 'Pick-up']
 
-  validates :ride_type, :seats_total, :origin_address_id, :destination_address_id, :gas_money, :schedule, presence: true
+  validates :ride_type, :origin_address_id, :destination_address_id, :gas_money, :schedule, presence: true
 
   def schedule=(new_schedule)
     write_attribute(:schedule, new_schedule.to_hash)
