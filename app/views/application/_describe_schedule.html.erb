@@ -1,4 +1,5 @@
 <!--http://www.wetware.co.nz/2009/07/rails-date-formats-strftime/-->
+<!--http://danilenko.org/2012/7/6/rails_timezones/-->
 
 <% if r.ride_type.downcase.include? 'drop-off' %>
   <% leading_text = 'Arriving at' %>
@@ -6,5 +7,10 @@
   <% leading_text = 'Leaving at' %>
 <% end %>
 
-<%= leading_text %> <%= r.schedule.start_time.strftime('%l:%M %P') %>
-from <%= r.schedule.start_time.strftime('%B %d, %Y') %> <%= r.schedule %>
+<% if r.schedule.recurrence_rules.empty? %>
+  <% schedule_text = 'on ' + r.schedule.to_s %>
+<% else %>
+  <% schedule_text = 'from ' + r.schedule.start_time.strftime('%B %d, %Y') + ' ' + r.schedule.to_s %>
+<% end %>
+
+<%= leading_text %> <%= r.schedule.start_time.strftime('%l:%M %P') %> <%= schedule_text %>

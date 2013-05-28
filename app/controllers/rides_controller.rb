@@ -42,10 +42,10 @@ class RidesController < ApplicationController
     end_date = Date.strptime(params[:ride][:to_date], '%m/%d/%Y')
     schedule = Schedule.new(start_time)
     rule = params[:ride][:recurring_rules]
-    if !rule.nil?
+    if rule != 'null'
       schedule.add_recurrence_rule Rule.from_yaml(params[:ride][:recurring_rules]).until(end_date)
-      ride.schedule = schedule
     end
+    ride.schedule = schedule
 
     if ride.save
       if params[:ride][:creator_type].include? 'looking'

@@ -24,7 +24,7 @@ $ ->
 
   #---------------------------------------------------------------------------------#
   # x-editable stuff
-  #$.fn.editable.defaults.mode = 'inline'
+  $.fn.editable.defaults.mode = 'inline'
 
   ## address model specific
   $('table.address a').editable
@@ -124,4 +124,8 @@ $ ->
 
   #---------------------------------------------------------------------------------#
   # picture upload stuff
-  $('picture_upload').fileupload()
+  #$('picture_upload').fileupload()
+
+  #---------------------------------------------------------------------------------#
+  # tooltip
+  $("[data-toggle='tooltip']").tooltip()

@@ -51,7 +51,18 @@
 
   <h4 class='ride-type-question'>What kind of ride are you offering?</h4>
 
-  <%= f.input :ride_type, collection: Ride::RIDE_TYPES, as: :radio_buttons, item_wrapper_class: 'inline', default: Ride::RIDE_TYPES.first, validate: { presence: true } %>
+  <%= f.input :ride_type, 
+    collection: Ride::RIDE_TYPES, 
+    as: :radio_buttons, 
+    item_wrapper_class: 'inline', 
+    default: Ride::RIDE_TYPES.first, 
+    validate: { presence: true }
+  %>
+
+  <div class='alert alert-info'>
+    <a class='close' data-dismiss='alert'>&#215;</a>
+    <strong>Help: </strong>A drop-off ride is one where the child is being dropped off at school. A pick-up ride is one where the child is being picked up from school.
+  </div>
 
   <% all_addresses = current_user.addresses + Address.where(user_id: 0).all %>
   <% if !@ride.origin_address.nil? %>
@@ -90,42 +101,51 @@
   <% end %>
   <div class='control-group select optional'>
     <div class='controls'>
-      <%= f.select_recurring :recurring_rules, [rule] %>
+      <%= f.select_recurring :recurring_rules, [rule], allow_blank: true %>
+    </div>
   </div>
-</div>
 
-<% if @ride.persisted? %>
-  <% from_val = @ride.schedule.start_time.strftime('%m/%d/%Y') %>
-<% else %>
-  <% from_val = Date.today.strftime('%m/%d/%Y') %>
-<% end %>
-
-<%= f.input :from_date, label: 'From', wrapper: :append do %>
-  <%= f.input_field :from_date, class: 'rideDateFrom input-small', value: from_val %>
-  <%= content_tag :span, class: 'add-on' do %>
-    <i class='icon-calendar'></i>
+  <% if @ride.persisted? %>
+    <% from_val = @ride.schedule.start_time.strftime('%m/%d/%Y') %>
+  <% else %>
+    <% from_val = Date.today.strftime('%m/%d/%Y') %>
   <% end %>
-<% end %>
 
-<% if @ride.persisted? %>
-  <% to_val = @ride.schedule.recurrence_rules[0].until_date.strftime('%m/%d/%Y') %>
-<% else %>
-  <% to_val = Date.new(2013,6,19).strftime('%m/%d/%Y') %>
-<% end %>
-
-<%= f.input :to_date, label: 'To', hint: 'School ends on this date', wrapper: :append do %>
-  <%= f.input_field :to_date, class: 'rideDateTo input-small', value: to_val %>
-  <%= content_tag :span, class: 'add-on' do %>
-    <i class='icon-calendar'></i>
+  <%= f.input :from_date, label: 'From', wrapper: :append do %>
+    <%= f.input_field :from_date, class: 'rideDateFrom input-small', value: from_val %>
+    <%= content_tag :span, class: 'add-on' do %>
+      <i class='icon-calendar'></i>
+    <% end %>
   <% end %>
-<% end %>
 
-<h4 class='ride-fare-question'>How much do you want each of your little riders to contribute, per ride?</h4>
-
-<%= f.input :gas_money, label: '$', default: 5,
-  collection: 0..20, input_html: { class: 'input-mini' } %>
-<%= f.input :seats_total, label: 'How many seats', default: 1,
-  collection: 1..4, input_html: { class: 'input-mini' } %>
-<%= f.button :submit, 'Save!', :class => 'btn btn-primary' %>
-
+  <% if @ride.persisted? %>
+    <% if @ride.schedule.recurrence_rules.empty? %> 
+      <% to_val = @ride.schedule.start_date.strftime('%m/%d/%Y') %>
+    <% else %>
+      <% to_val = @ride.schedule.recurrence_rules[0].until_date.strftime('%m/%d/%Y') %>
+    <% end %>
+  <% else %>
+    <% to_val = Date.today.strftime('%m/%d/%Y') %>
   <% end %>
+
+  <%= f.input :to_date, label: 'To', wrapper: :append do %>
+    <%= f.input_field :to_date, class: 'rideDateTo input-small', value: to_val %>
+    <%= content_tag :span, class: 'add-on' do %>
+      <i class='icon-calendar'></i>
+    <% end %>
+  <% end %>
+
+  <div class='alert alert-info'>
+    <a class='close' data-dismiss='alert'>&#215;</a>
+    <strong>Help: </strong>For non-recurring ride, set the From and To date to be the same date.
+  </div>
+
+  <h4 class='ride-fare-question'>How much do you want each of your little riders to contribute, per ride?</h4>
+
+  <%= f.input :gas_money, label: '$', default: 5,
+    collection: 0..20, input_html: { class: 'input-mini' } %>
+  <%= f.input :seats_total, label: 'How many seats', default: 1,
+    collection: 1..4, input_html: { class: 'input-mini' } %>
+  <%= f.button :submit, 'Save!', :class => 'btn btn-primary' %>
+
+<% end %>
