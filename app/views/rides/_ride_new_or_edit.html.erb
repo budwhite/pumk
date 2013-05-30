@@ -81,6 +81,11 @@
   <%= f.input :destination, label: 'To', as: :select, selected: dest_addr_name,
     collection: all_addresses.map { |a| a[:name] } %>
 
+  <div class='alert alert-info'>
+    <a class='close' data-dismiss='alert'>&#215;</a>
+    <strong>Help: </strong>You can add more addresses from your <%= link_to 'Edit Profile page', edit_user_registration_path %>.
+  </div>
+
   <% if !@ride.schedule.nil? %>
     <% time = @ride.schedule.start_time.strftime('%I:%M %p') %>
   <% else %>
