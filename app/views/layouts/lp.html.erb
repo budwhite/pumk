@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=Edge,chrome=1'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title><%= yield(:title) %></title>
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag 'application', :media => 'all' %>
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+  </head>
+  <body>
+    <div class='container-narrow'>
+      <div class='masthead'>
+        <% if false %>
+        <ul class='nav nav-pills pull-right'>
+          <% if user_signed_in? %>
+            <li class='dropdown'>
+            <a class='dropdown-toggle' data-toggle='dropdown' href='#'>
+              <%= current_user.first_name %>
+              <b class='caret'></b>
+            </a>
+            <ul class='dropdown-menu'>
+              <li>
+              <%= link_to destroy_user_session_path, method: :delete, id: 'sign_out' do %>
+                <i class='icon-off'></i>
+                Log out
+              <% end %>
+              </li>
+            </ul>
+            </li>
+          <% else %>
+            <li class='active'><%= link_to "Sign up", new_user_registration_path %></li>
+            <li><%= link_to "Login", new_user_session_path %></li>
+          <% end %>
+
+        </ul>             
+        <% end %>
+        <h3>
+          <%= link_to root_path, class: 'brand' do %>
+            <%= image_tag('logo.png', :alt => 'logo') %>
+          <% end %>
+        </h3>
+      </div>
+      <hr>
+      <%= yield %>
+      <hr>
+      <div class='footer'>
+        PickUpMyKid, LLC. | <%= link_to 'Contact', 'mailto:hello@pickupmykid.com' %>
+      </div>
+    </div>
+
+    <!-- Javascripts
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <%= javascript_include_tag 'application' %>
+    <%= render partial: 'layouts/ga' if Rails.env == 'production' %>
+  </body>
+</html>

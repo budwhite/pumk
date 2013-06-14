@@ -2,12 +2,13 @@ Love::Application.routes.draw do
 
   get 'home/about'
 
+  resources :users, :only => [:create, :show, :update]
+
   devise_for :users, :controllers => { 
     :omniauth_callbacks => 'omniauth_callbacks',
     :registrations => 'devise/custom/registrations'
   }
   put '/users/setup_paypal', to: 'users#setup_paypal', as: 'setup_paypal_users'
-  resources :users, :only => [:show, :update]
   put '/rides/booked/', to: 'rides#booked', as: 'booked_ride'
   put '/rides/responded/', to: 'rides#responded', as: 'responded_to_ride'
   get '/rides/confirm/:ride_id', to: 'rides#confirm', as: 'confirm_ride'

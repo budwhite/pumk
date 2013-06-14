@@ -1,0 +1,95 @@
+<div class='hero-unit'>
+  <h1>Welcome to PickUpMyKid!</h1>
+  <p class='lead'>We’ll match you with other Cherry Crest parents making the same school commute so you can form a carpool.</p>
+  <h3>Why carpool?</h3>
+  <ul>
+    <li>
+    <span class='lead'>
+      Help out other busy parents (they help you too!)
+    </span>
+    </li>
+    <li>
+    <span class='lead'>
+      Cut down on traffic and show the environment some love
+    </span>
+    </li>
+    <li>
+    <span class='lead'>
+      Earn money when you drive - save gas when you don't
+    </span>
+    </li>
+  </ul>
+  <%= link_to 'More Info', home_about_path, class: 'btn btn-primary btn-large' %>
+</div>
+
+<div class='row-fluid'>
+
+  <div class='span6'>
+
+    <%= simple_form_for resource, as: resource_name, url: session_path(resource_name) do |f| %>
+      <legend>Sign in</legend>
+      <% if session[:signup_fail].nil? %>
+        <%= render 'show_flash' %>
+      <% end %>
+      <%= f.input :email %>
+      <%= f.input :password %>
+      <%= button_tag(type: 'submit', class: "btn btn-primary") do %>
+        <i class='icon-signin'></i>
+        Log In
+      <% end %>
+      <%= link_to "Forgot your password?", new_password_path('user') %>
+    <% end %>
+
+  </div>
+
+  <div class='span6'>
+
+    <%= simple_form_for resource, as: resource_name, url: registration_path(resource_name), html: { class: 'form-horizontal' }, validate: true do |f| %>
+      <legend>
+        Sign up <span class='label label-info'>Note!</span>
+        <small><strong>For Cherry Crest parents and staff only.</strong></small>
+      </legend>
+      <% if !session[:signup_fail].nil? %>
+        <%= render 'show_flash' %>
+        <% session.delete(:signup_fail) %>
+      <% end %>
+      <%= f.input :first_name %>
+      <%= f.input :last_name %>
+      <%= f.input :email, validate: true %>
+      <%= f.input :password, validate: true  %>
+      <%= f.input :password_confirmation, validate: true %>
+      <%= f.input :verified, as: :hidden, input_html: { checked: false } %>
+      <%= f.button :submit, 'Register', class: 'btn-success' %>
+    <% end %>
+
+  </div>
+</div>
+
+<% if false %>
+<div class='row-fluid'>
+  <div class='span12 text-center'>
+    <h2>How It Works</h2>
+  </div>
+</div>
+
+<br></br>
+
+<div class='row-fluid'>
+  <div class='span4'>
+    <div class='text-center'><i class="icon-home icon-4x" style='color:blue'></i></div>
+    <br></br>
+    <h4 class='text-center'>Find other Cherry Crest families who live close to you</h4>
+  </div>
+  <div class='span4'>
+    <div class='text-center'><i class="icon-car-sign icon-4x" style='color:blue'></i></div>
+    <br></br>
+    <h4 class='text-center'>Form carpools in which either you are the parent driver or your kid is the little rider</h4>
+  </div>
+  <div class='span4'>
+    <div class='text-center'><i class="icon-calendar icon-4x" style='color:blue'></i></div>
+    <br></br>
+    <h4 class='text-center'>We'll take care of scheduling, reminders via emails or text and handling of payment</h4>
+  </div>
+  
+</div>
+<% end %>

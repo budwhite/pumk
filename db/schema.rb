@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130518061000) do
+ActiveRecord::Schema.define(:version => 20130613070925) do
 
   create_table "addresses", :force => true do |t|
     t.string   "street1"
@@ -92,6 +92,7 @@ ActiveRecord::Schema.define(:version => 20130518061000) do
     t.string   "gender"
     t.boolean  "verified"
     t.string   "avatar"
+    t.text     "comment"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

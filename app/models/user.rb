@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
          :omniauthable, :omniauth_providers => [:facebook]
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :provider, :uid, :name, :email, :password, :password_confirmation, :remember_me, :addresses_attributes, :children_attributes, :phone_number, :paypal_email, :gender, :first_name, :last_name, :verified, :avatar
+  attr_accessible :provider, :uid, :name, :email, :password, :password_confirmation, :remember_me, :addresses_attributes, :children_attributes, :phone_number, :paypal_email, :gender, :first_name, :last_name, :verified, :avatar, :comment
 
   has_many :addresses, dependent: :destroy
   accepts_nested_attributes_for :addresses, allow_destroy: true
@@ -21,7 +21,7 @@ class User < ActiveRecord::Base
   # @user.rides_as_rider
   has_many :rides_as_rider, :source => :ride, :through => :riderships
 
-  validates :first_name, :last_name, presence: true
+  validates :first_name, :last_name, :phone_number, presence: true
 
   mount_uploader :avatar, AvatarUploader
 

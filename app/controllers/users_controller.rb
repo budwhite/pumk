@@ -1,5 +1,18 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, except: :create
+
+  def create
+    User.create!(
+      first_name: params[:user][:first_name],
+      last_name: params[:user][:last_name],
+      email: params[:user][:email],
+      phone_number: params[:user][:phone_number],
+      comment: params[:user][:comment],
+      password: Devise.friendly_token[0,20]
+    )
+    flash[:success] = 'Thanks for signing up! We will get in touch with you promptly!'
+    redirect_to root_path
+  end
 
   def show
     if current_user.id == params[:id].to_i

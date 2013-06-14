@@ -1,0 +1,60 @@
+<% flash.each do |name, msg| %>
+  <div class='alert alert-success'>
+    <a class='close' data-dismiss='alert'>&#215;</a>
+    <%= content_tag :div, msg, :id => "flash_#{name}" %>
+  </div>
+<% end %>
+
+<div class='jumbotron'>
+  <h1>Safe and reliable transportation for your kids!</h1>
+  <p class='lead'>We offer door-to-door child pick-up/drop-off chauffeuring services for summer camps, day care/after school care, doctor appointments, extracurricular activities and more.
+  </p>
+  <a class='btn btn-large btn-success' href='#loginModal' data-toggle='modal'>Sign up today</a>
+  <h3>Or call 
+    <a href='tel:8162378889'><%= number_to_phone(8162378889, area_code: true) %></a> 
+    to make a reservation</h3>
+</div>
+
+<hr>
+
+<div class='row-fluid marketing'>
+  <div class='span12'>
+    <h2>We are parents too</h2>
+    <ul>
+      <li>Our drivers are all parents who drive their own kids everyday.</li>
+      <li>All drivers have valid drivers' licenses and have undergone thorough background screenings.</li>
+      <li>Our drivers are also CPR and First Aid certified.</li>
+    </ul>
+
+    <h2>Safety is our top priority</h2>
+    <ul>
+      <li>We notifiy parents via text message when a child is dropped off at destination.</li>
+      <li>Our cars and vans are well maintained and equipped with a First Aid Kit, GPS and Cell phone. Carseats and boosters are used in accordance with law.</li>
+    </ul>
+
+    <h2>Rate</h2>
+    <p>One way trip $15 up to 10 miles. Call us for weekly or other arrangement.</p>
+  </div>
+</div>
+
+<div id='loginModal' class='modal hide fade'>
+  <%= simple_form_for @user, 
+    url: url_for(action: 'create', controller: 'users'),
+    html: { class: 'form-horizontal' }, validate: true do |f| %>
+    <div class='modal-header'>
+      <button type='button' class='close' data-dismiss='modal'>×</button>
+      <h3 id='myModalLabel'>Please fill out the form below:</h3>
+    </div>
+    <div class='modal-body'>
+      <%= f.input :first_name %>
+      <%= f.input :last_name %>
+      <%= f.input :email, validate: true %>
+      <%= f.input :phone_number, validate: true  %>
+      <%= f.input :comment, input_html: { rows: 5 } %>
+    </div>
+    <div class='modal-footer'>
+      <button class='btn' data-dismiss='modal'>Close</button>
+      <%= f.button :submit, 'Submit', class: 'btn-success' %>
+    </div>
+  <% end %>
+</div>
