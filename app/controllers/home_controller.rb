@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  layout :determine_layout
+  layout 'application'
 
   def index
     if params.has_key? :cherrycrest

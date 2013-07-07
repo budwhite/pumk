@@ -4,9 +4,10 @@
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=Edge,chrome=1'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title><%= content_for?(:title) ? yield(:title) : 'Go Chargers!' %></title>
+    <title><%= content_for?(:title) ? yield(:title) : 'Ride for kids' %></title>
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag 'application', :media => 'all' %>
+    <%= tag :meta, :name => "stripe-key", :content => Rails.configuration.stripe[:publishable_key] %>
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -61,10 +62,7 @@
       <%= yield %>
       <hr>
       <div class='footer'>
-        <%= image_tag('cc_logo_small.png', :alt => 'logo') %>
-        Made for Cherry Crest Elementary by PTSA volunteers |
-        <%= link_to 'Contact', 'mailto:hello@pickupmykid.com' %>
-        <%# link_to 'About', home_about_path %>
+        PickUpMyKid, LLC. | <%= link_to 'Contact', 'mailto:hello@pickupmykid.com' %>
       </div>
     </div>
 

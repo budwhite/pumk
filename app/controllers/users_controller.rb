@@ -106,4 +106,20 @@ class UsersController < ApplicationController
     @ridership = Ridership.find(params[:user][:ridership_id])
     render 'rides/responded'
   end
+
+  def pay
+    current_user.update_attributes(params[:user])
+    current_user.update_stripe
+    redirect_to edit_user_registration_path, notice: 'Payment registered!'
+
+  rescue Stripe::CardError => e
+    flash[:error] = e.message
+    current_user.stripe_token = nil
+    redirect_to edit_user_registration_path
+
+  rescue Stripe::StripeError => e
+    flash[:error] = "There was a problem with your credit card: " + e.message
+    current_user.stripe_token = nil
+    redirect_to edit_user_registration_path
+  end
 end

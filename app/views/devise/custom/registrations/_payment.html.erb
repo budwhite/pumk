@@ -1,0 +1,47 @@
+<div class='row'>
+  <div class='span6'>
+
+    <%= form_for current_user, url: pay_users_path, html: { id: 'creditcard_form' } do |f| %>
+      <%= render partial: 'home/show_flash' %>
+
+      <% if current_user.last_4_digits %>
+        <div id='change_card'>
+          <label>Card</label>
+          <div class='input'>
+            <span>
+              Using card ending with
+              <%= current_user.last_4_digits %>
+              <%= link_to '(change)', '#' %>
+            </span>
+          </div>
+        </div>
+      <% end %>
+
+      <div id='credit_card' style="display:<%= current_user.last_4_digits ? 'none':'block' %>">
+        <div class='field'>
+          <%= label_tag :card_number, 'Credit Card Number' %>
+          <%= text_field_tag :card_number, nil, name: nil %>
+        </div>
+        <div class='field'>
+          <%= label_tag :card_code, 'Security Code on Card (CVV)' %>
+          <%= text_field_tag :card_code, nil, name: nil %>
+        </div>
+        <div class='field'>
+          <%= label_tag :card_month, 'Card Expiration' %>
+          <%= select_month nil, {add_month_numbers: true}, {name: nil, id: 'card_month'} %>
+          <%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+15}, {name: nil, id: 'card_year'} %>
+        </div>
+        <%= f.hidden_field :stripe_token %>
+      </div>
+
+      <div class='actions'>
+        <%= f.submit 'Register', class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+    <div id='credit_card_errors' class='alert alert-error' style='display:none'>
+      <a class='close' data-dismiss='alert'>&#215;</a>
+      <div id='stripe_error_message'>
+      </div>
+    </div>
+  </div>
+</div>

@@ -50,3 +50,4 @@ gem 'recurring_select'
 gem 'bootstrap-x-editable-rails'
 gem 'jquery-cookie-rails'
 gem "jquery-fileupload-rails"
+gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'

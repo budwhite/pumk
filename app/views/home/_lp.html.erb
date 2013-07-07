@@ -9,10 +9,10 @@
   <h1>Safe and Reliable Transportation for Your Kids!</h1>
   <p class='lead'>We offer door-to-door child pick-up/drop-off chauffeuring services for summer camps, day care/after school care, doctor appointments, extracurricular activities and more.
   </p>
-  <a class='btn btn-large btn-success' href='#loginModal' data-toggle='modal'>Sign up today</a>
-  <h3>Or call 
-    <a href='tel:8162378889'><%= number_to_phone(8162378889, area_code: true) %></a> 
-    to make a reservation</h3>
+  <h3>
+    Call <a href='tel:8162378889'><%= number_to_phone(8162378889, area_code: true) %></a> to make a reservation
+  </h3>
+
 </div>
 
 <hr>
@@ -37,24 +37,66 @@
   </div>
 </div>
 
-<div id='loginModal' class='modal hide fade'>
-  <%= simple_form_for @user, 
-    url: url_for(action: 'create', controller: 'users'),
-    html: { class: 'form-horizontal' }, validate: true do |f| %>
-    <div class='modal-header'>
-      <button type='button' class='close' data-dismiss='modal'>×</button>
-      <h3 id='myModalLabel'>Please fill out the form below:</h3>
-    </div>
-    <div class='modal-body'>
+<div class='row-fluid'>
+
+  <div class='span6'>
+
+    <%= simple_form_for resource, as: resource_name, url: session_path(resource_name) do |f| %>
+      <legend>Sign in</legend>
+      <% if session[:signup_fail].nil? %>
+        <%= render 'show_flash' %>
+      <% end %>
+      <%= f.input :email %>
+      <%= f.input :password %>
+      <%= button_tag(type: 'submit', class: "btn btn-primary") do %>
+        <i class='icon-signin'></i>
+        Log In
+      <% end %>
+      <%= link_to "Forgot your password?", new_password_path('user') %>
+    <% end %>
+
+  </div>
+
+  <div class='span6'>
+
+    <%= simple_form_for resource, as: resource_name, url: registration_path(resource_name), html: { class: 'form-horizontal' }, validate: true do |f| %>
+      <legend>Sign up</legend>
+      <% if !session[:signup_fail].nil? %>
+        <%= render 'show_flash' %>
+        <% session.delete(:signup_fail) %>
+      <% end %>
       <%= f.input :first_name %>
       <%= f.input :last_name %>
       <%= f.input :email, validate: true %>
-      <%= f.input :phone_number, validate: true  %>
-      <%= f.input :comment, input_html: { rows: 5 } %>
-    </div>
-    <div class='modal-footer'>
-      <button class='btn' data-dismiss='modal'>Close</button>
-      <%= f.button :submit, 'Submit', class: 'btn-success' %>
-    </div>
-  <% end %>
+      <%= f.input :password, validate: true  %>
+      <%= f.input :password_confirmation, validate: true %>
+      <%= f.input :verified, as: :hidden, input_html: { checked: false } %>
+      <%= f.button :submit, 'Register', class: 'btn-success' %>
+    <% end %>
+
+  </div>
 </div>
+
+<% if false %>
+  <div id='loginModal' class='modal hide fade'>
+    <%= simple_form_for @user, 
+      url: url_for(action: 'create', controller: 'users'),
+      html: { class: 'form-horizontal' }, validate: true do |f| %>
+      <div class='modal-header'>
+        <button type='button' class='close' data-dismiss='modal'>×</button>
+        <h3 id='myModalLabel'>Please fill out the form below:</h3>
+      </div>
+      <div class='modal-body'>
+        <%= f.input :first_name %>
+        <%= f.input :last_name %>
+        <%= f.input :email, validate: true %>
+        <%= f.input :phone_number, validate: true  %>
+        <%= f.input :comment, input_html: { rows: 5 } %>
+      </div>
+      <div class='modal-footer'>
+        <button class='btn' data-dismiss='modal'>Close</button>
+        <%= f.button :submit, 'Submit', class: 'btn-success' %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

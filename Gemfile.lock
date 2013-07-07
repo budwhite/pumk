@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/stripe/stripe-ruby
+  revision: 9b64772b7edc78f18e6694a73b45d610a1bcaa49
+  specs:
+    stripe (1.8.3)
+      multi_json (>= 1.0.4, < 2)
+      rest-client (~> 1.4)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -197,6 +205,8 @@ GEM
       rails (>= 3.1)
       sass-rails (>= 3.1)
     ref (1.0.4)
+    rest-client (1.6.7)
+      mime-types (>= 1.16)
     ruby-graphviz (1.0.9)
     sass (3.2.7)
     sass-rails (3.2.6)
@@ -280,6 +290,7 @@ DEPENDENCIES
   sass-rails
   sextant
   simple_form
+  stripe!
   therubyracer
   thin
   twitter-bootstrap-rails

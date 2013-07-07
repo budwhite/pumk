@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130613070925) do
+ActiveRecord::Schema.define(:version => 20130706181137) do
 
   create_table "addresses", :force => true do |t|
     t.string   "street1"
@@ -93,6 +93,8 @@ ActiveRecord::Schema.define(:version => 20130613070925) do
     t.boolean  "verified"
     t.string   "avatar"
     t.text     "comment"
+    t.string   "stripe_id"
+    t.string   "last_4_digits"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

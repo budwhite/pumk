@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
          :omniauthable, :omniauth_providers => [:facebook]
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :provider, :uid, :name, :email, :password, :password_confirmation, :remember_me, :addresses_attributes, :children_attributes, :phone_number, :paypal_email, :gender, :first_name, :last_name, :verified, :avatar, :comment
+  attr_accessible :provider, :uid, :name, :email, :password, :password_confirmation, :remember_me, :addresses_attributes, :children_attributes, :phone_number, :paypal_email, :gender, :first_name, :last_name, :verified, :avatar, :comment, :stripe_token, :stripe_id, :last_4_digits
 
   has_many :addresses, dependent: :destroy
   accepts_nested_attributes_for :addresses, allow_destroy: true
@@ -21,7 +21,9 @@ class User < ActiveRecord::Base
   # @user.rides_as_rider
   has_many :rides_as_rider, :source => :ride, :through => :riderships
 
-  validates :first_name, :last_name, :phone_number, presence: true
+  validates :first_name, :last_name, presence: true
+
+  attr_accessor :stripe_token
 
   mount_uploader :avatar, AvatarUploader
 
@@ -52,5 +54,36 @@ class User < ActiveRecord::Base
   def profile_photo(type = 'normal')
     '/assets/cc_logo_' + type + '.png'
     #self.image.split('=')[0] << "=#{type}"
+  end
+
+  def update_stripe
+    if stripe_id.nil?
+      if !stripe_token.present?
+        raise "We're doing something wrong -- this isn't supposed to happen"
+      end
+
+      customer = Stripe::Customer.create(
+        email: email,
+        card: stripe_token
+      )
+
+      self.last_4_digits = customer.active_card.last4
+    else
+      customer = Stripe::Customer.retrieve(stripe_id)
+
+      if stripe_token.present?
+        customer.card = stripe_token
+      end
+
+      customer.email = email
+
+      customer.save
+
+      self.last_4_digits = customer.active_card.last4
+    end
+
+    self.stripe_id = customer.id
+    self.stripe_token = nil
+    save!
   end
 end

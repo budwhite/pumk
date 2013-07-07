@@ -1,0 +1,10 @@
+<%= form_tag charges_path, id: 'charge' do %>
+  <%# flash.each do |name, msg| %>
+    <%# raise %>
+  <%# end %>
+  <h3>Please enter the amount you would like to pay:</h3>
+  <input name='amount'></input>
+  <button id='custom_button'>Purchase</button>
+
+  <script src="https://checkout.stripe.com/v2/checkout.js"></script>
+<% end %>
