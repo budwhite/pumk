@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby '1.9.3'
+
 group :production do
   gem 'newrelic_rpm'
   gem 'psych'
@@ -33,7 +35,7 @@ gem 'jquery-rails'
 gem 'therubyracer'
 gem 'less-rails'
 gem 'devise'
-gem 'figaro', '~> 0.6.4'
+gem 'figaro', '~> 0.7.0'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'ice_cube'

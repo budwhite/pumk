@@ -9,8 +9,9 @@
   <h1>Safe and Reliable Transportation for Your Kids!</h1>
   <p class='lead'>We offer door-to-door child pick-up/drop-off chauffeuring services for summer camps, day care/after school care, doctor appointments, extracurricular activities and more.
   </p>
+  <a class='btn btn-large btn-success' href='#loginModal' data-toggle='modal'>Sign up today</a>
   <h3>
-    Call <a href='tel:8162378889'><%= number_to_phone(8162378889, area_code: true) %></a> to make a reservation
+    Or Call <a href='tel:8162378889'><%= number_to_phone(8162378889, area_code: true) %></a> to make a reservation
   </h3>
 
 </div>
@@ -37,6 +38,7 @@
   </div>
 </div>
 
+<% if false %>
 <div class='row-fluid'>
 
   <div class='span6'>
@@ -76,27 +78,26 @@
 
   </div>
 </div>
-
-<% if false %>
-  <div id='loginModal' class='modal hide fade'>
-    <%= simple_form_for @user, 
-      url: url_for(action: 'create', controller: 'users'),
-      html: { class: 'form-horizontal' }, validate: true do |f| %>
-      <div class='modal-header'>
-        <button type='button' class='close' data-dismiss='modal'>×</button>
-        <h3 id='myModalLabel'>Please fill out the form below:</h3>
-      </div>
-      <div class='modal-body'>
-        <%= f.input :first_name %>
-        <%= f.input :last_name %>
-        <%= f.input :email, validate: true %>
-        <%= f.input :phone_number, validate: true  %>
-        <%= f.input :comment, input_html: { rows: 5 } %>
-      </div>
-      <div class='modal-footer'>
-        <button class='btn' data-dismiss='modal'>Close</button>
-        <%= f.button :submit, 'Submit', class: 'btn-success' %>
-      </div>
-    <% end %>
-  </div>
 <% end %>
+
+<div id='loginModal' class='modal hide fade'>
+  <%= simple_form_for @user, 
+    url: url_for(action: 'create', controller: 'users'),
+    html: { class: 'form-horizontal' }, validate: true do |f| %>
+    <div class='modal-header'>
+      <button type='button' class='close' data-dismiss='modal'>×</button>
+      <h3 id='myModalLabel'>Please fill out the form below:</h3>
+    </div>
+    <div class='modal-body'>
+      <%= f.input :first_name %>
+      <%= f.input :last_name %>
+      <%= f.input :email, validate: true %>
+      <%= f.input :phone_number, validate: true  %>
+      <%= f.input :comment, input_html: { rows: 5 } %>
+    </div>
+    <div class='modal-footer'>
+      <button class='btn' data-dismiss='modal'>Close</button>
+      <%= f.button :submit, 'Submit', class: 'btn-success' %>
+    </div>
+  <% end %>
+</div>
