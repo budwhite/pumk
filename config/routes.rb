@@ -2,6 +2,8 @@ Love::Application.routes.draw do
 
   get 'home/about'
 
+  resources :users, :only => [:create, :show, :update]
+
   devise_for :users, :controllers => { 
     :omniauth_callbacks => 'omniauth_callbacks',
     :registrations => 'devise/custom/registrations'
@@ -16,7 +18,6 @@ Love::Application.routes.draw do
   get '/rides/responding/:id', to: 'rides#responding', as: 'responding_to_ride'
   put '/users/pay', to: 'users#pay', as: 'pay_users'
 
-  resources :users, :only => [:create, :show, :update]
   resources :addresses
   resources :children, only: [:destroy]
   resources :charges
