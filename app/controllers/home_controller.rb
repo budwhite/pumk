@@ -1,6 +1,4 @@
 class HomeController < ApplicationController
-  layout 'lp'
-
   def index
     if params.has_key? :cherrycrest
       @cc = true
@@ -12,6 +10,9 @@ class HomeController < ApplicationController
   end
 
   def about
+  end
+
+  def driver
   end
   
   private

@@ -1,0 +1,13 @@
+<% flash.each do |name, msg| %>
+  <div class='alert alert-success'>
+    <a class='close' data-dismiss='alert'>&#215;</a>
+    <%= content_tag :div, msg, :id => "flash_#{name}" %>
+  </div>
+<% end %>
+
+<div class='jumbotron'>
+  <h1>Help busy parents drive their kids and earn $20+ per hour!</h1>
+  <p class='lead'>
+    PickUpMyKid is building a community of reliable and trustworthy drivers to help busy parents drive their kids among schools, homes and a million other activities in between. This is ideal for people with flexible schedule who are great with kids.
+  </p>
+</div>

@@ -15,7 +15,6 @@
   <body>
     <div class='container-narrow'>
       <div class='masthead'>
-        <% if false %>
         <ul class='nav nav-pills pull-right'>
           <% if user_signed_in? %>
             <li class='dropdown'>
@@ -37,7 +36,6 @@
             <li><%= link_to "Login", new_user_session_path %></li>
           <% end %>
         </ul>
-        <% end %>
         <h3>
           <%= link_to root_path, class: 'brand' do %>
             <%= image_tag('logo.png', :alt => 'logo') %>

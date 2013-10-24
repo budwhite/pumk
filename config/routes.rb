@@ -1,6 +1,7 @@
 Love::Application.routes.draw do
 
   get 'home/about'
+  get 'driver', to: 'home#driver', as: :driver
 
   resources :users, :only => [:create, :show, :update]
 

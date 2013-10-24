@@ -18,6 +18,8 @@
       <div class='masthead'>
         <ul class='nav nav-pills pull-right'>
 
+          <li class='active'><%# link_to 'Become a Driver', driver_path %></li>
+
           <% if user_signed_in? %>
             <li class='dropdown'>
             <a class='dropdown-toggle' data-toggle='dropdown' href='#'>
@@ -45,17 +47,26 @@
             <li class='active'><%= link_to 'Post a ride', new_ride_path %></li>
 
           <% else %>
-            <li class='active'><%= link_to 'FAQ', home_about_path %></li>
             <li><%# link_to "Sign in with Facebook", '#', id: 'sign_in' %></li>
             <li><%# link_to "Sign up", new_user_registration_path %></li>
-            <li><%# link_to "Login", new_user_session_path %></li>
+            <li class='active dropdown'>
+            <a class='dropdown-toggle' data-toggle='dropdown' href='#'>
+              Log in
+              <b class='caret'></b>
+            </a>
+            <ul class='dropdown-menu'>
+              <h4>hello</h4>
+              <p>This is a story.</p>
+            </ul>
+            </li>
           <% end %>
+
         </ul>
         <h3>
           <%= link_to root_path, class: 'brand' do %>
             <%= image_tag('logo.png', :alt => 'logo') %>
           <% end %>
-          <%#<span style='font-size:14px' class='lead text-error'>for Cherry Crest</span>%>
+          <span style='font-size:14px' class='lead text-error'>Private Beta</span>
         </h3>
       </div>
 
